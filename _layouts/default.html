@@ -1,26 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-	<head>
-        <meta charset="utf-8">
-        <title>{{ page.title }} | Max Gilmour</title>
-        <link rel="stylesheet" type="text/css" href="/css/main.css">
-	</head>
-	<body>
-		<nav>
-    		<ul>
-	        	<li><a href="/">Home</a></li>
-        		<li><a href="/cv">CV</a></li>
-        		<li><a href="/projects">Projects</a></li>
-    		</ul>
-		</nav>
-		<div class="container">
-            {{ content }}
-		</div>
-		<footer>
-    		<ul>
-        		<li><a href="https://github.com/maxgmr">GitHub</a></li>
-                <li>Email (NATO phonetic alphabet): {Mike Xray Zulu Mike Xray Zulu}120{at}gmail{dot}com</li>
-			</ul>
-		</footer>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ page.title }} | Max Gilmour</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  </head>
+  <body>
+    {% include navbar.html %}
+    <div class="container">{{ content }}</div>
+    {% include footer.html %}
+  </body>
 </html>
