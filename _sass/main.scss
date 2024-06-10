@@ -60,6 +60,11 @@ a:hover {
   color: $bgreen;
 }
 
+img {
+  max-width: 90%;
+  height: auto;
+}
+
 .current {
   color: $blue;
 }
