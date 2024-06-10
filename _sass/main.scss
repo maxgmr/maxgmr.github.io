@@ -35,6 +35,17 @@ footer ul li {
   margin-right: 20px;
 }
 
+nav {
+  border-bottom: 1px solid $dgrey;
+  font-size: 1em;
+}
+
+footer {
+  border-top: 1px solid $dgrey;
+  font-size: 0.8em;
+  color: $bdgrey;
+}
+
 h1 {
   font-size: 2.5em;
   font-family: "Noto Serif", "Times New Roman", "serif";
