@@ -1,8 +1,8 @@
 - name: Home
   link: /
 - name: Résumé
-  link: /resume
+  link: /resume.html
 - name: Projects
-  link: /projects
+  link: /projects.html
 - name: GitHub
   link: https://github.com/maxgmr/
