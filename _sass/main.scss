@@ -16,6 +16,42 @@ $bcyan: #8ec07c;
 $lgrey: #a89984;
 $blgrey: #ebdbb2;
 
-.current {
+body {
+  background-color: $blgrey;
+  margin: 60px auto;
+  width: 90%;
+}
+
+nav ul,
+footer ul {
+  font-family: "Noto Serif", "Times New Roman", serif;
+  padding: 0px;
+  list-style: none;
+  font-weight: bold;
+}
+nav ul li,
+footer ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+h1 {
+  font-size: 2.5em;
+  font-family: "Noto Serif", "Times New Roman", "serif";
+  color: $dgrey;
+}
+
+a {
+  text-decoration: none;
   color: $green;
+}
+a:hover {
+  color: $bgreen;
+}
+
+.current {
+  color: $blue;
+}
+.current:hover {
+  color: $blue;
 }
