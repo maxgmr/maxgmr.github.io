@@ -7,4 +7,10 @@ date: 24-06-01
 
 A lightweight TUI program that allows users to browse installed packages on Arch Linux systems.
 
-{% include image.html img="pacbrow_screenshot" type="png" alt="pacbrow displaying some search results." %}
+{%
+    include image.html
+        img="pacbrow_screenshot"
+        type="png"
+        alt="pacbrow displaying some search results."
+        class="big-img"
+%}

@@ -1,10 +1,14 @@
 {% assign img = include.img %} {% assign type = include.type %} {% assign alt =
-include.alt %}
+include.alt %} {% assign class = include.class %}
 
 <picture>
   <source
     type="image/{{ type }}"
     srcset="/assets/images/{{ img }}.{{ type }}"
   />
-  <img src="/assets/images/{{ img }}.{{ type }}" alt="{{ include.alt }}" />
+  <img
+    class="{{ class }}"
+    src="/assets/images/{{ img }}.{{ type }}"
+    alt="{{ include.alt }}"
+  />
 </picture>

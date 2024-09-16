@@ -37,7 +37,7 @@ footer ul li {
 
 nav {
   border-bottom: 1px solid $dgrey;
-  font-size: 1em;
+  font-size: 1.5em;
 }
 
 footer {
@@ -60,7 +60,23 @@ a:hover {
   color: $bgreen;
 }
 
-img {
+div.figures {
+  display: flex;
+  justify-content: left;
+  max-height: 500px;
+}
+
+figcaption {
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+img.img-300 {
+  max-height: 300px;
+  height: auto;
+}
+
+img.big-img {
   max-width: 90%;
   height: auto;
 }

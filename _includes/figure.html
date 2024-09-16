@@ -1,0 +1,21 @@
+{% assign img = include.img %} {% assign type = include.type %} {% assign
+caption = include.caption %} {% assign alt = include.alt %} {% assign class =
+include.class %} {% assign use-href = include.use-href %} {% assign href =
+include.href %} {% if use-href == "true" %}
+<a href="{{ href }}">
+  {% endif %}
+  <figure>
+    <source
+      type="image/{{ type }}"
+      srcset="/assets/images/{{ img }}.{{ type }}"
+    />
+    <img
+      class="{{ class }}"
+      src="/assets/images/{{ img }}.{{ type }}"
+      alt="{{ include.alt }}"
+    />
+    <figcaption>{{ caption }}</figcaption>
+  </figure>
+  {% if use-href == "true" %}
+</a>
+{% endif %}
