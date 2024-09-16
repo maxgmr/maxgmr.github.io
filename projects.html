@@ -4,11 +4,12 @@ title: Projects
 
 <h1>Projects</h1>
 <ul>
-  {% for project in site.projects %}
+  {% assign projects = site.projects | sort: 'date' | reverse %} {% for project
+  in projects %}
   <li>
     <h2><a href="{{ project.url }}">{{ project.name }}</a></h2>
     <h3>{{ project.languages }}</h3>
-    <p>{{ project.content | markdownify }}</p>
+    <p>{{ project.blurb }}</p>
   </li>
   {% endfor %}
 </ul>

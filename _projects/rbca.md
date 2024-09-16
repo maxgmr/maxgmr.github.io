@@ -1,0 +1,8 @@
+---
+name: rbca
+languages: Rust
+blurb: "Game Boy emulator."
+date: 24-08-24
+---
+
+A Game Boy emulator made from scratch. The SM83 instruction set, PPU, and MMU have been implemented. Currently working on more accurate clock timing.
