@@ -74,6 +74,13 @@ div.figures {
 img.fig-img {
   object-fit: contain;
   max-height: 300px;
+  border: 5px solid transparent;
+}
+
+img.fig-img:hover {
+  object-fit: contain;
+  max-height: 300px;
+  border: 5px solid $bgreen;
 }
 
 figcaption {
