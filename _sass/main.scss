@@ -37,19 +37,23 @@ footer ul li {
 
 nav {
   border-bottom: 1px solid $dgrey;
-  font-size: 1.5em;
+  font-size: 2em;
 }
 
 footer {
   border-top: 1px solid $dgrey;
-  font-size: 0.8em;
+  font-size: 1.2em;
   color: $bdgrey;
 }
 
 h1 {
-  font-size: 2.5em;
+  font-size: 3em;
   font-family: "Noto Serif", "Times New Roman", "serif";
   color: $dgrey;
+}
+
+p {
+  font-size: 1.5em;
 }
 
 a {
@@ -63,17 +67,18 @@ a:hover {
 div.figures {
   display: flex;
   justify-content: left;
-  max-height: 500px;
+  width: auto;
+  max-height: 100%;
+}
+
+img.fig-img {
+  object-fit: contain;
+  max-height: 300px;
 }
 
 figcaption {
   font-style: italic;
-  font-size: 0.8em;
-}
-
-img.img-300 {
-  max-height: 300px;
-  height: auto;
+  font-size: 1.2em;
 }
 
 img.big-img {
