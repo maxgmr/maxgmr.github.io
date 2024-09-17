@@ -22,11 +22,11 @@ A more detailed résumé can be provided upon request.
 
 ### B.Sc., Major Cognitive Systems, Computational Intelligence and Design (Fall 2018 - Apr 2024)
 
-### UBC Cognitive Systems Co-op Certification (May 2020 - Apr 2024)
+### Cognitive Systems Co-op Certification (May 2020 - Apr 2024)
 
 ## [Projects](/projects.html)
 
 ## Languages & Technologies
 
-- Java; JavaScript/Node.JS; TypeScript; Node; SQL; Python; Rust; Bash
-- Git; MongoDB; Regex; Unity; Godot; Linux; Vim
+- Rust; JavaScript/Node.js; TypeScript; SQL; Python
+- Git; MongoDB; Regex; Unity; Godot; Linux; Neovim
