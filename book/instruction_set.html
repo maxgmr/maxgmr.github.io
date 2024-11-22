@@ -1,0 +1,1830 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Instruction Set - MFS-16 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">2.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="cpu.html"><strong aria-hidden="true">3.</strong> CPU</a></li><li class="chapter-item expanded "><a href="interrupts.html"><strong aria-hidden="true">4.</strong> Interrupts</a></li><li class="chapter-item expanded "><a href="instruction_set.html" class="active"><strong aria-hidden="true">5.</strong> Instruction Set</a></li><li class="chapter-item expanded "><a href="memory_map.html"><strong aria-hidden="true">6.</strong> Memory Map</a></li><li class="chapter-item expanded "><a href="io.html"><strong aria-hidden="true">7.</strong> I/O</a></li><li class="chapter-item expanded "><a href="gpu.html"><strong aria-hidden="true">8.</strong> GPU</a></li><li class="chapter-item expanded "><a href="mfs16asm.html"><strong aria-hidden="true">9.</strong> MFS-16 Assembly</a></li><li class="chapter-item expanded "><a href="demo_programs.html"><strong aria-hidden="true">10.</strong> Demo Programs</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">MFS-16 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="instruction-set"><a class="header" href="#instruction-set">Instruction Set</a></h1>
+<p>This is the list of MFS-16 CPU instructions. Each opcode is 16 bits + the length of the immediate value (if any).</p>
+<p>Instructions do not affect CPU flags unless otherwise specified. Any flags omitted by an instruction's list of affected flags are unaffected by the instruction.</p>
+<p>"iff" is short for "if and only if".</p>
+<h2 id="legend"><a class="header" href="#legend">Legend</a></h2>
+<ul>
+<li>
+<p><strong>rn</strong>: 16-bit register <em>n</em>. (A, B, C, D, E, H, L).</p>
+</li>
+<li>
+<p><strong>brn</strong>: 32-bit big register <em>n</em>. (BC, DE, HL).</p>
+</li>
+<li>
+<p><strong>vrn</strong>: 8-bit virtual register <em>n</em>. (A1, A0, B1, B0, C1, C0, D1, D0, E1, E0, H1, H0, L1, L0).</p>
+</li>
+<li>
+<p><strong>imm16</strong>: The 16-bit immediate value after this instruction.</p>
+</li>
+<li>
+<p><strong>imm32</strong>: The 32-bit immediate value after this instruction.</p>
+</li>
+<li>
+<p><strong>imm8</strong>: The 8-bit immediate value after this instruction.</p>
+</li>
+<li>
+<p><strong>u4</strong>: 4-bit unsigned integer constant (0x0 to 0xF).</p>
+</li>
+<li>
+<p><strong>SP</strong>: The stack pointer.</p>
+</li>
+<li>
+<p><strong>Z</strong>: The Zero flag.</p>
+</li>
+<li>
+<p><strong>C</strong>: The Carry flag.</p>
+</li>
+<li>
+<p><strong>O</strong>: The Overflow flag.</p>
+</li>
+<li>
+<p><strong>P</strong>: The Parity flag.</p>
+</li>
+<li>
+<p><strong>N</strong>: The Negative flag.</p>
+</li>
+</ul>
+<p>Consider this example on reading the notation. instruction <code>LD ra, rb</code> with opcode <code>0x01ab</code> means that any combination of 16-bit registers can be entered. <code>LD A, B</code> has opcode <code>0x0101</code>, while <code>LD L, C</code> has opcode <code>0x0162</code>.</p>
+<h2 id="instructions"><a class="header" href="#instructions">Instructions</a></h2>
+<ul>
+<li>
+<p><strong>NOP:</strong> Do nothing.<br />
+Opcode: 0x0000<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>LD ra, rb:</strong> Load rb into ra.<br />
+Opcode: 0x01ab<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>LD bra, brb:</strong> Load brb into bra.<br />
+Opcode: 0x01(a+7)(b+7)<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>LD SP,imm32:</strong> Load imm32 into SP.<br />
+Opcode: 0x01A0<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>LD [imm32], SP:</strong> Load SP into address imm32.<br />
+Opcode: 0x01A1<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>LD SP, bra:</strong> Load bra into SP.<br />
+Opcode: 0x01Ba<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>LD bra, SP:</strong> Load SP into bra.<br />
+Opcode: 0x01Ca<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>LD vra, vrb:</strong> Load vrb into vra.<br />
+Opcode: 0x02ab<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>LD ra, imm16:</strong> Load imm16 into ra.<br />
+Opcode: 0x030a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LD bra, imm32:</strong> Load imm32 into bra.<br />
+Opcode: 0x031a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>LD vra, imm8:</strong> Load imm8 into vra.<br />
+Opcode: 0x032a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LD [bra], imm16:</strong> Load imm16 into address bra.<br />
+Opcode: 0x033a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LD [bra], rb:</strong> Load rb into address bra.<br />
+Opcode: 0x04ab<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LD ra, [brb]:</strong> Load the value at address brb into ra.<br />
+Opcode: 0x05ab<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LDR ra, imm32:</strong> Load the value at (HL + imm32 interpreted as a signed integer) into ra.<br />
+Opcode: 0x057a<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>LDI [bra], rb:</strong> Load rb into address bra, then increase bra by two.<br />
+Opcode: 0x06ab<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LDD [bra], rb:</strong> Load rb into address bra, then decrease bra by two.<br />
+Opcode: 0x07ab<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LDI ra, [brb]:</strong> Load the value at brb into address ra, then increase brb by two.<br />
+Opcode: 0x08ab<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LDD ra, [brb]:</strong> Load the value at brb into address ra, then decrease brb by two.<br />
+Opcode: 0x09ab<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LDI [bra], imm16:</strong> Load imm16 into address bra, then increment bra by two.<br />
+Opcode: 0x097a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LDD [bra], imm16:</strong> Load imm16 into address bra, then decrement bra by two.<br />
+Opcode: 0x098a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>LD [imm32], ra:</strong> Load ra into address imm32.<br />
+Opcode: 0x099a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>LD ra, [imm32]:</strong> Load the value at imm32 into ra.<br />
+Opcode: 0x09Aa<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>VLD [bra], brb:</strong> VRAM load. Faster 32-bit version of LD [bra], rb for VRAM addresses only.<br />
+Opcode: 0x0Aab<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>VLDI [bra], brb:</strong> VRAM load. Faster 32-bit version of LDI [bra], rb for VRAM addresses only.<br />
+Opcode: 0x0Bab<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>VLDD [bra], brb:</strong> VRAM load. Faster 32-bit version of LDD [bra], rb for VRAM addresses only.<br />
+Opcode: 0x0Cab<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>VLD [bra], imm32:</strong> VRAM load. Faster 32-bit version of VLD [bra], imm32 for VRAM addresses only.<br />
+Opcode: 0x0C3a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>VLDI [bra], imm32:</strong> VRAM load. Faster 32-bit version of VLDI [bra], imm32 for VRAM addresses only.<br />
+Opcode: 0x0C4a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>VLDD [bra], imm32:</strong> VRAM load. Faster 32-bit version of VLDI [bra], imm32 for VRAM addresses only.<br />
+Opcode: 0x0C5a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>ADD ra, rb:</strong> ra += rb.<br />
+Opcode: 0x10ab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the result == 0.</li>
+<li>Set C iff the result exceeds the available bits.</li>
+<li>Set O iff the signed result is too large or small to fit in the available bits.</li>
+<li>Set P iff the result is even.</li>
+<li>Set N iff the result is negative when interpreted as a signed value.</li>
+</ul>
+</li>
+<li>
+<p><strong>ADD bra, brb:</strong> bra += brb.<br />
+Opcode: 0x10(a+7)(b+7)<br />
+Cycles: 2<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADD vra, vrb:</strong> vra += vrb.<br />
+Opcode: 0x11ab<br />
+Cycles: 2<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADC ra, rb:</strong> ra += rb + C.<br />
+Opcode: 0x12ab<br />
+Cycles: 2<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADC bra, brb:</strong> bra += brb + C.<br />
+Opcode: 0x12(a+7)(b+7)<br />
+Cycles: 2<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADC vra, vrb:</strong> vra += vrb + C.<br />
+Opcode: 0x13ab<br />
+Cycles: 2<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>SUB ra, rb:</strong> ra -= rb.<br />
+Opcode: 0x14ab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the result == 0.</li>
+<li>Set C iff rb &gt; ra for SUB instructions. Set C iff (rb + C) &gt; ra for SBB instructions.</li>
+<li>Set O iff the signed result is too large or too small to fit in the available bits.</li>
+<li>Set P iff the result is even.</li>
+<li>Set N iff the result is negative when interpreted as a signed value.</li>
+</ul>
+</li>
+<li>
+<p><strong>SUB bra, brb:</strong> bra -= brb.<br />
+Opcode: 0x14(a+7)(b+7)<br />
+Cycles: 2<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SUB vra, vrb:</strong> vra -= vrb.<br />
+Opcode: 0x15ab<br />
+Cycles: 2<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SBB ra, rb:</strong> ra -= rb + C.<br />
+Opcode: 0x16ab<br />
+Cycles: 2<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SBB bra, brb:</strong> bra -= brb + C.<br />
+Opcode: 0x16(a+7)(b+7)<br />
+Cycles: 2<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SBB vra, vrb:</strong> vra -= vrb + C.<br />
+Opcode: 0x17ab<br />
+Cycles: 2<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>ADD ra, imm16:</strong> ra += imm16.<br />
+Opcode: 0x180a<br />
+Cycles: 3<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADC ra, imm16:</strong> ra += imm16 + C.<br />
+Opcode: 0x181a<br />
+Cycles: 3<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADD bra, imm32:</strong> bra += imm32.<br />
+Opcode: 0x182a<br />
+Cycles: 4<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADC bra, imm32:</strong> bra += imm32 + C.<br />
+Opcode: 0x183a<br />
+Cycles: 4<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADD vra, imm8:</strong> vra += imm8.<br />
+Opcode: 0x184a<br />
+Cycles: 3<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADC vra, imm8:</strong> vra += imm8 + C.<br />
+Opcode: 0x185a<br />
+Cycles: 3<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>SUB ra, imm16:</strong> ra -= imm16.<br />
+Opcode: 0x186a<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SBB ra, imm16:</strong> ra -= imm16 + C.<br />
+Opcode: 0x187a<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SUB bra, imm32:</strong> bra -= imm32.<br />
+Opcode: 0x188a<br />
+Cycles: 4<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SBB bra, imm32:</strong> bra -= imm32 + C.<br />
+Opcode: 0x189a<br />
+Cycles: 4<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SUB vra, imm8:</strong> vra -= imm8.<br />
+Opcode: 0x18Aa<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SBB vra, imm8:</strong> vra -= imm8 + C.<br />
+Opcode: 0x18Ba<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>ADD ra, [brb]:</strong> ra += (the value at brb).<br />
+Opcode: 0x19ab<br />
+Cycles: 3<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>ADC ra, [brb]:</strong> ra += (the value at brb) + C.<br />
+Opcode: 0x1Aab<br />
+Cycles: 3<br />
+Flags: See ADD ra, rb.</p>
+</li>
+<li>
+<p><strong>SUB ra, [brb]:</strong> ra -= (the value at brb).<br />
+Opcode: 0x1Bab<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>SBB ra, [brb]:</strong> ra -= (the value at brb) + C.<br />
+Opcode: 0x1Cab<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>TCP ra:</strong> Two's complement ra. ra = -ra.<br />
+Opcode: 0x1D0a<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the result == 0.</li>
+<li>Set C iff the result != 0.</li>
+<li>Set O iff the signed result is too large or too small to fit in the available bits.</li>
+<li>Set P iff the result is even.</li>
+<li>Set N iff the result is negative when interpreted as a signed value.</li>
+</ul>
+</li>
+<li>
+<p><strong>TCP bra:</strong> Two's complement bra. bra = -bra.<br />
+Opcode: 0x1D1a<br />
+Cycles: 2<br />
+Flags: See TCP ra.</p>
+</li>
+<li>
+<p><strong>TCP vra:</strong> Two's complement vra. vra = -vra.<br />
+Opcode: 0x1D2a<br />
+Cycles: 2<br />
+Flags: See TCP ra.</p>
+</li>
+<li>
+<p><strong>INC ra:</strong> Increment ra. ra += 1.<br />
+Opcode: 0x1D3a<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the result == 0.</li>
+<li>Set P iff the result is even.</li>
+</ul>
+</li>
+<li>
+<p><strong>INC bra:</strong> Increment bra. bra += 1.<br />
+Opcode: 0x1D4a<br />
+Cycles: 2<br />
+Flags: See INC ra.</p>
+</li>
+<li>
+<p><strong>INC vra:</strong> Increment vra. vra += 1.<br />
+Opcode: 0x1D5a<br />
+Cycles: 2<br />
+Flags: See INC ra.</p>
+</li>
+<li>
+<p><strong>DEC ra:</strong> Decrement ra. ra -= 1.<br />
+Opcode: 0x1D6a<br />
+Cycles: 2<br />
+Flags: See INC ra.</p>
+</li>
+<li>
+<p><strong>DEC bra:</strong> Decrement bra. bra -= 1.<br />
+Opcode: 0x1D7a<br />
+Cycles: 2<br />
+Flags: See INC ra.</p>
+</li>
+<li>
+<p><strong>DEC vra:</strong> Decrement vra. vra -= 1.<br />
+Opcode: 0x1D8a<br />
+Cycles: 2<br />
+Flags: See INC ra.</p>
+</li>
+<li>
+<p><strong>PSS ra:</strong> Set the CPU flags based on the value of ra.<br />
+Opcode: 0x1D9a<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the value == 0.</li>
+<li>Set P iff the value is even.</li>
+<li>Set N iff the value is negative when interpreted as a signed integer.</li>
+</ul>
+</li>
+<li>
+<p><strong>PSS bra:</strong> Set the CPU flags based on the value of bra.<br />
+Opcode: 0x1DAa<br />
+Cycles: 2<br />
+Flags: See PSS ra.</p>
+</li>
+<li>
+<p><strong>PSS vra:</strong> Set the CPU flags based on the value of vra.<br />
+Opcode: 0x1DBa<br />
+Cycles: 2<br />
+Flags: See PSS ra.</p>
+</li>
+<li>
+<p><strong>PSS imm16:</strong> Set the CPU flags based on the value of imm16.<br />
+Opcode: 0x1DC0<br />
+Cycles: 3<br />
+Flags: See PSS ra.</p>
+</li>
+<li>
+<p><strong>PSS imm32:</strong> Set the CPU flags based on the value of imm32.<br />
+Opcode: 0x1DC1<br />
+Cycles: 4<br />
+Flags: See PSS ra.</p>
+</li>
+<li>
+<p><strong>PSS imm8:</strong> Set the CPU flags based on the value of imm8.<br />
+Opcode: 0x1DC2<br />
+Cycles: 3<br />
+Flags: See PSS ra.</p>
+</li>
+<li>
+<p><strong>AND ra, rb:</strong> Bitwise AND. ra &amp;= rb.<br />
+Opcode: 0x1Eab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the result == 0.</li>
+<li>Reset C.</li>
+<li>Reset O.</li>
+<li>Set P iff the result is even.</li>
+<li>Set N iff the result is negative when interpreted as a signed integer.</li>
+</ul>
+</li>
+<li>
+<p><strong>AND bra, brb:</strong> Bitwise AND. bra &amp;= brb.<br />
+Opcode: 0x1Fab<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>AND vra, vrb:</strong> Bitwise AND. vra &amp;= vrb.<br />
+Opcode: 0x20ab<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>AND ra, [brb]:</strong> Bitwise AND. ra &amp;= (the value at brb).<br />
+Opcode: 0x21ab<br />
+Cycles: 3<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>OR ra, rb:</strong> Bitwise OR. ra |= rb.<br />
+Opcode: 0x22ab<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>OR bra, brb:</strong> Bitwise OR. bra |= brb.<br />
+Opcode: 0x23ab<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>OR vra, vrb:</strong> Bitwise OR. vra |= vrb.<br />
+Opcode: 0x24ab<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>OR ra, [brb]:</strong> Bitwise OR. ra |= (the value at brb).<br />
+Opcode: 0x25ab<br />
+Cycles: 3<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>XOR ra, rb:</strong> Bitwise XOR. ra ^= rb.<br />
+Opcode: 0x26ab<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>XOR bra, brb:</strong> Bitwise XOR. bra ^= brb.<br />
+Opcode: 0x27ab<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>XOR vra, vrb:</strong> Bitwise XOR. vra ^= vrb.<br />
+Opcode: 0x28ab<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>XOR ra, [brb]:</strong> Bitwise XOR. ra ^= (the value at brb).<br />
+Opcode: 0x29ab<br />
+Cycles: 3<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>AND ra, imm16:</strong> Bitwise AND. ra &amp;= imm16.<br />
+Opcode: 0x2A0a<br />
+Cycles: 3<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>AND bra, imm32:</strong> Bitwise AND. bra &amp;= imm32.<br />
+Opcode: 0x2A1a<br />
+Cycles: 4<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>AND vra, imm8:</strong> Bitwise AND. vra &amp;= imm8.<br />
+Opcode: 0x2A2a<br />
+Cycles: 3<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>OR ra, imm16:</strong> Bitwise OR. ra |= imm16.<br />
+Opcode: 0x2A3a<br />
+Cycles: 3<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>OR bra, imm32:</strong> Bitwise OR. bra |= imm32.<br />
+Opcode: 0x2A4a<br />
+Cycles: 4<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>OR vra, imm8:</strong> Bitwise OR. vra |= imm8.<br />
+Opcode: 0x2A5a<br />
+Cycles: 3<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>XOR ra, imm16:</strong> Bitwise XOR. ra ^= imm16.<br />
+Opcode: 0x2A6a<br />
+Cycles: 3<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>XOR bra, imm32:</strong> Bitwise XOR. bra ^= imm32.<br />
+Opcode: 0x2A7a<br />
+Cycles: 4<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>XOR vra, imm8:</strong> Bitwise XOR. vra ^= imm8.<br />
+Opcode: 0x2A8a<br />
+Cycles: 3<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>NOT ra:</strong> Flip all bits of ra. ra = !ra.<br />
+Opcode: 0x2A9a<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>NOT bra:</strong> Flip all bits of bra. bra = !bra.<br />
+Opcode: 0x2AAa<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>NOT vra:</strong> Flip all bits of vra. vra = !vra.<br />
+Opcode: 0x2ABa<br />
+Cycles: 2<br />
+Flags: See AND ra, rb.</p>
+</li>
+<li>
+<p><strong>ASR ra, u4:</strong> Arithmetic shift. Shift ra right u4 bits, preserving the most significant bit.<br />
+Opcode: 0x2Bab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set C iff the last bit shifted out == 1.</li>
+<li>Reset O.</li>
+</ul>
+</li>
+<li>
+<p><strong>ASR bra, u4:</strong> Arithmetic shift. Shift bra right u4 bits, preserving the most significant bit.<br />
+Opcode: 0x2Cab<br />
+Cycles: 2<br />
+Flags: See ASR ra, u4.</p>
+</li>
+<li>
+<p><strong>ASR vra, u4:</strong> Arithmetic shift. Shift vra right u4 bits, preserving the most significant bit.<br />
+Opcode: 0x2Dab<br />
+Cycles: 2<br />
+Flags: See ASR ra, u4.</p>
+</li>
+<li>
+<p><strong>ASL ra, u4:</strong> Arithmetic shift. Shift ra left u4 bits, shifting on zeroes.<br />
+Opcode: 0x2Eab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set C iff the last bit shifted out == 1.</li>
+<li>Set O iff the result's most significant bit is different than the original operand's most significant bit.</li>
+</ul>
+</li>
+<li>
+<p><strong>ASL bra, u4:</strong> Arithmetic shift. Shift bra left u4 bits, shifting on zeroes.<br />
+Opcode: 0x2Fab<br />
+Cycles: 2<br />
+Flags: See ASL ra, u4.</p>
+</li>
+<li>
+<p><strong>ASL vra, u4:</strong> Arithmetic shift. Shift vra left u4 bits, shifting on zeroes.<br />
+Opcode: 0x30ab<br />
+Cycles: 2<br />
+Flags: See ASL ra, u4.</p>
+</li>
+<li>
+<p><strong>LSR ra, u4:</strong> Logical shift. Shift ra right u4 bits, shifting on zeroes.<br />
+Opcode: 0x31ab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set C iff the last bit shifted out == 1.</li>
+<li>Set O iff the most significant bit of the original operand == 1.</li>
+</ul>
+</li>
+<li>
+<p><strong>LSR bra, u4:</strong> Logical shift. Shift bra right u4 bits, shifting on zeroes.<br />
+Opcode: 0x32ab<br />
+Cycles: 2<br />
+Flags: See LSR ra, u4.</p>
+</li>
+<li>
+<p><strong>LSR vra, u4:</strong> Logical shift. Shift vra right u4 bits, shifting on zeroes.<br />
+Opcode: 0x33ab<br />
+Cycles: 2<br />
+Flags: See LSR ra, u4.</p>
+</li>
+<li>
+<p><strong>RTR ra, u4:</strong> Rotate ra right u4 bits.<br />
+Opcode: 0x34ab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set C iff the last bit carried over to the other side == 1.</li>
+<li>Set O iff the result's most significant bit is different than the original operand's most significant bit.</li>
+</ul>
+</li>
+<li>
+<p><strong>RTR bra, u4:</strong> Rotate bra right u4 bits.<br />
+Opcode: 0x35ab<br />
+Cycles: 2<br />
+Flags: See RTR ra, u4.</p>
+</li>
+<li>
+<p><strong>RTR vra, u4:</strong> Rotate vra right u4 bits.<br />
+Opcode: 0x36ab<br />
+Cycles: 2<br />
+Flags: See RTR ra, u4.</p>
+</li>
+<li>
+<p><strong>RTL ra, u4:</strong> Rotate ra left u4 bits.<br />
+Opcode: 0x37ab<br />
+Cycles: 2<br />
+Flags: See RTR ra, u4.</p>
+</li>
+<li>
+<p><strong>RTL bra, u4:</strong> Rotate bra left u4 bits.<br />
+Opcode: 0x38ab<br />
+Cycles: 2<br />
+Flags: See RTR ra, u4.</p>
+</li>
+<li>
+<p><strong>RTL vra, u4:</strong> Rotate vra left u4 bits.<br />
+Opcode: 0x39ab<br />
+Cycles: 2<br />
+Flags: See RTR ra, u4.</p>
+</li>
+<li>
+<p><strong>RCR ra, u4:</strong> Rotate ra right u4 bits through the carry flag.<br />
+Opcode: 0x3Aab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>C will be set iff the bit rotated into C == 1.</li>
+<li>Set O iff the result's most significant bit is different than the original operand's most significant bit.</li>
+</ul>
+</li>
+<li>
+<p><strong>RCR bra, u4:</strong> Rotate bra right u4 bits through the carry flag.<br />
+Opcode: 0x3Bab<br />
+Cycles: 2<br />
+Flags: See RCR ra, u4.</p>
+</li>
+<li>
+<p><strong>RCR vra, u4:</strong> Rotate vra right u4 bits through the carry flag.<br />
+Opcode: 0x3Cab<br />
+Cycles: 2<br />
+Flags: See RCR ra, u4.</p>
+</li>
+<li>
+<p><strong>RCL ra, u4:</strong> Rotate ra left u4 bits through the carry flag.<br />
+Opcode: 0x3Dab<br />
+Cycles: 2<br />
+Flags: See RCR ra, u4.</p>
+</li>
+<li>
+<p><strong>RCL bra, u4:</strong> Rotate bra left u4 bits through the carry flag.<br />
+Opcode: 0x3Eab<br />
+Cycles: 2<br />
+Flags: See RCR ra, u4.</p>
+</li>
+<li>
+<p><strong>RCL vra, u4:</strong> Rotate vra left u4 bits through the carry flag.<br />
+Opcode: 0x3Fab<br />
+Cycles: 2<br />
+Flags: See RCR ra, u4.</p>
+</li>
+<li>
+<p><strong>CMP ra, rb:</strong> Set the flags according to the result of ra - rb, discarding the result.<br />
+Opcode: 0x40ab<br />
+Cycles: 2<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP bra, brb:</strong> Set the flags according to the result of bra - brb, discarding the result.<br />
+Opcode: 0x40(a+7)(b+7)<br />
+Cycles: 2<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP vra, vrb:</strong> Set the flags according to the result of vra - vrb, discarding the result.<br />
+Opcode: 0x41ab<br />
+Cycles: 2<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP ra, imm16:</strong> Set the flags according to the result of ra - imm16, discarding the result.<br />
+Opcode: 0x420a<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP bra, imm32:</strong> Set the flags according to the result of bra - imm32, discarding the result.<br />
+Opcode: 0x421a<br />
+Cycles: 4<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP vra, imm8:</strong> Set the flags according to the result of vra - imm8, discarding the result.<br />
+Opcode: 0x422a<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP imm16, ra:</strong> Set the flags according to the result of imm16 - ra, discarding the result.<br />
+Opcode: 0x423a<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP imm32, bra:</strong> Set the flags according to the result of imm32 - bra, discarding the result.<br />
+Opcode: 0x424a<br />
+Cycles: 4<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP imm8, vra:</strong> Set the flags according to the result of imm8 - vra, discarding the result.<br />
+Opcode: 0x425a<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP ra, [brb]:</strong> Set the flags according to the result of ra - (the value at brb), discarding the result.<br />
+Opcode: 0x43ab<br />
+Cycles: 3<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>CMP [bra], rb:</strong> Set the flags according to the result of (the value at bra) - rb, discarding the result.<br />
+Opcode: 0x44ab<br />
+Cycles: 5<br />
+Flags: See SUB ra, rb.</p>
+</li>
+<li>
+<p><strong>BIT ra, u4:</strong> Set the Zero flag according to bit u4 of ra.<br />
+Opcode: 0x45ab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff bit u4 of the given value == 0.</li>
+</ul>
+</li>
+<li>
+<p><strong>BIT [bra], u4:</strong> Set the Zero flag according to bit u4 of the value at bra.<br />
+Opcode: 0x46ab<br />
+Cycles: 3<br />
+Flags: See BIT ra, u4.</p>
+</li>
+<li>
+<p><strong>STB ra, u4:</strong> Set bit u4 of ra.<br />
+Opcode: 0x47ab<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>STB [bra], u4:</strong> Set bit u4 of the value at bra.<br />
+Opcode: 0x48ab<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RSB ra, u4:</strong> Reset bit u4 of ra.<br />
+Opcode: 0x49ab<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>RSB [bra], u4:</strong> Reset bit u4 of the value at bra.<br />
+Opcode: 0x4Aab<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>TGB ra, u4:</strong> Toggle bit u4 of ra.<br />
+Opcode: 0x4Bab<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>TGB [bra], u4:</strong> Toggle bit u4 of the value at bra.<br />
+Opcode: 0x4Cab<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>SWP ra:</strong> Swap the high and low bytes of ra.<br />
+Opcode: 0x4D0a<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>SWP [bra]:</strong> Swap the high and low bytes of the value at bra.<br />
+Opcode: 0x4D1a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>SZF:</strong> Set the Zero flag.<br />
+Opcode: 0x4D20<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z.</li>
+</ul>
+</li>
+<li>
+<p><strong>RZF:</strong> Reset the Zero flag.<br />
+Opcode: 0x4D21<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Reset Z.</li>
+</ul>
+</li>
+<li>
+<p><strong>TZF:</strong> Toggle the Zero flag.<br />
+Opcode: 0x4D22<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff Z is currently reset.</li>
+</ul>
+</li>
+<li>
+<p><strong>SCF:</strong> Set the Carry flag.<br />
+Opcode: 0x4D23<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set C.</li>
+</ul>
+</li>
+<li>
+<p><strong>RCF:</strong> Reset the Carry flag.<br />
+Opcode: 0x4D24<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Reset C.</li>
+</ul>
+</li>
+<li>
+<p><strong>TCF:</strong> Toggle the Carry flag.<br />
+Opcode: 0x4D25<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set C iff C is currently reset.</li>
+</ul>
+</li>
+<li>
+<p><strong>SOF:</strong> Set the Overflow flag.<br />
+Opcode: 0x4D26<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set O.</li>
+</ul>
+</li>
+<li>
+<p><strong>ROF:</strong> Reset the Overflow flag.<br />
+Opcode: 0x4D27<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Reset O.</li>
+</ul>
+</li>
+<li>
+<p><strong>TOF:</strong> Toggle the Overflow flag.<br />
+Opcode: 0x4D28<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set O iff O is currently reset.</li>
+</ul>
+</li>
+<li>
+<p><strong>SPF:</strong> Set the Parity flag.<br />
+Opcode: 0x4D29<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set P.</li>
+</ul>
+</li>
+<li>
+<p><strong>RPF:</strong> Reset the Parity flag.<br />
+Opcode: 0x4D2A<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Reset P.</li>
+</ul>
+</li>
+<li>
+<p><strong>TPF:</strong> Toggle the Parity flag.<br />
+Opcode: 0x4D2B<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set P iff P is currently reset.</li>
+</ul>
+</li>
+<li>
+<p><strong>SNF:</strong> Set the Negative flag.<br />
+Opcode: 0x4D2C<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set N.</li>
+</ul>
+</li>
+<li>
+<p><strong>RNF:</strong> Reset the Negative flag.<br />
+Opcode: 0x4D2D<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Reset N.</li>
+</ul>
+</li>
+<li>
+<p><strong>TNF:</strong> Toggle the Negative flag.<br />
+Opcode: 0x4D2E<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set N iff N is currently reset.</li>
+</ul>
+</li>
+<li>
+<p><strong>SAF:</strong> Set all flags.<br />
+Opcode: 0x4D2F<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z.</li>
+<li>Set C.</li>
+<li>Set O.</li>
+<li>Set P.</li>
+<li>Set N.</li>
+</ul>
+</li>
+<li>
+<p><strong>RAF:</strong> Reset all flags.<br />
+Opcode: 0x4D30<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Reset Z.</li>
+<li>Reset C.</li>
+<li>Reset O.</li>
+<li>Reset P.</li>
+<li>Reset N.</li>
+</ul>
+</li>
+<li>
+<p><strong>MULU ra, rb:</strong> Unsigned multiplication. ra *= rb.<br />
+Opcode: 0x50ab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the result == 0.</li>
+<li>Set C iff the result exceeds the available bits.</li>
+<li>Set P iff the result is even.</li>
+<li>Set N iff the result is negative when interpreted as a signed integer.</li>
+</ul>
+</li>
+<li>
+<p><strong>MULI ra, rb:</strong> Signed multiplication. ra *= rb.<br />
+Opcode: 0x51ab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the result == 0.</li>
+<li>Set O iff the result is too large or small to fit in the available bits.</li>
+<li>Set P iff the result is even.</li>
+<li>Set N iff the result is negative when interpreted as a signed integer.</li>
+</ul>
+</li>
+<li>
+<p><strong>DIVU ra, rb:</strong> Unsigned division. Does nothing if rb == 0. Stores the remainder in rb. ra /= rb.<br />
+Opcode: 0x52ab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the result == 0.</li>
+<li>Set P iff the result is even.</li>
+<li>Set N iff the result is negative when interpreted as a signed integer.</li>
+</ul>
+</li>
+<li>
+<p><strong>DIVI ra, rb:</strong> Signed division. Does nothing if rb == 0. Stores the remainder in rb. ra /= rb.<br />
+Opcode: 0x53ab<br />
+Cycles: 2<br />
+Flags:</p>
+<ul>
+<li>Set Z iff the result == 0.</li>
+<li>Set O iff the numerator is the biggest negative number of its data type and the denominator is -1.</li>
+<li>Set P iff the result is even.</li>
+<li>Set N iff the result is negative when interpreted as a signed integer.</li>
+</ul>
+</li>
+<li>
+<p><strong>MULU bra, brb:</strong> Unsigned multiplication. bra *= brb.<br />
+Opcode: 0x50(a+7)(b+7)<br />
+Cycles: 2<br />
+Flags: See MULU ra, rb.</p>
+</li>
+<li>
+<p><strong>MULI bra, brb:</strong> Signed multiplication. bra *= brb.<br />
+Opcode: 0x51(a+7)(b+7)<br />
+Cycles: 2<br />
+Flags: See MULI ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVU bra, brb:</strong> Unsigned division. Stores the remainder in brb. bra /= brb.<br />
+Opcode: 0x52(a+7)(b+7)<br />
+Cycles: 2<br />
+Flags: See DIVU ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVI bra, brb:</strong> Signed division. Stores the remainder in brb. bra /= brb.<br />
+Opcode: 0x53(a+7)(b+7)<br />
+Cycles: 2<br />
+Flags: See DIVI ra, rb.</p>
+</li>
+<li>
+<p><strong>MULU vra, vrb:</strong> Unsigned multiplication. vra *= vrb.<br />
+Opcode: 0x54ab<br />
+Cycles: 2<br />
+Flags: See MULU ra, rb.</p>
+</li>
+<li>
+<p><strong>MULI vra, vrb:</strong> Signed multiplication. vra *= vrb.<br />
+Opcode: 0x55ab<br />
+Cycles: 2<br />
+Flags: See MULI ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVU vra, vrb:</strong> Unsigned division. Stores the remainder in vrb. vra /= vrb.<br />
+Opcode: 0x56ab<br />
+Cycles: 2<br />
+Flags: See DIVU ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVI vra, vrb:</strong> Signed division. Stores the remainder in vrb. vra /= vrb.<br />
+Opcode: 0x57ab<br />
+Cycles: 2<br />
+Flags: See DIVI ra, rb.</p>
+</li>
+<li>
+<p><strong>MULU ra, [brb]:</strong> Unsigned multiplication. ra *= (the value at brb).<br />
+Opcode: 0x58ab<br />
+Cycles: 3<br />
+Flags: See MULU ra, rb.</p>
+</li>
+<li>
+<p><strong>MULI ra, [brb]:</strong> Signed multiplication. ra *= (the value at brb).<br />
+Opcode: 0x59ab<br />
+Cycles: 3<br />
+Flags: See MULI ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVU ra, [brb]:</strong> Unsigned division. Stores the remainder in brb. ra *= (the value at brb).<br />
+Opcode: 0x5Aab<br />
+Cycles: 3<br />
+Flags: See DIVU ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVI ra, [brb]:</strong> Signed division. Stores the remainder in brb. ra /= (the value at brb).<br />
+Opcode: 0x5Bab<br />
+Cycles: 3<br />
+Flags: See DIVI ra, rb.</p>
+</li>
+<li>
+<p><strong>MULU ra, imm16:</strong> Unsigned multiplication. ra *= imm16.<br />
+Opcode: 0x5C0a<br />
+Cycles: 3<br />
+Flags: See MULU ra, rb.</p>
+</li>
+<li>
+<p><strong>MULI ra, imm16:</strong> Signed multiplication. ra *= imm16.<br />
+Opcode: 0x5C1a<br />
+Cycles: 3<br />
+Flags: See MULI ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVU ra, imm16:</strong> Unsigned division. Stores the remainder in register A. ra /= imm16.<br />
+Opcode: 0x5C2a<br />
+Cycles: 3<br />
+Flags: See DIVU ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVI ra, imm16:</strong> Signed division. Stores the remainder in register A. ra /= imm16.<br />
+Opcode: 0x5C3a<br />
+Cycles: 3<br />
+Flags: See DIVI ra, rb.</p>
+</li>
+<li>
+<p><strong>MULU bra, imm32:</strong> Unsigned multiplication. bra *= imm32.<br />
+Opcode: 0x5C4a<br />
+Cycles: 4<br />
+Flags: See MULU ra, rb.</p>
+</li>
+<li>
+<p><strong>MULI bra, imm32:</strong> Signed multiplication. bra *= imm32.<br />
+Opcode: 0x5C5a<br />
+Cycles: 4<br />
+Flags: See MULI ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVU bra, imm32:</strong> Unsigned division. Stores the remainder in big register BC. bra /= imm32.<br />
+Opcode: 0x5C6a<br />
+Cycles: 4<br />
+Flags: See DIVU ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVI bra, imm32:</strong> Signed division. Stores the remainder in big register BC. bra /= imm32.<br />
+Opcode: 0x5C7a<br />
+Cycles: 4<br />
+Flags: See DIVI ra, rb.</p>
+</li>
+<li>
+<p><strong>MULU vra, imm8:</strong> Unsigned multiplication. vra *= imm8.<br />
+Opcode: 0x5C8a<br />
+Cycles: 3<br />
+Flags: See MULU ra, rb.</p>
+</li>
+<li>
+<p><strong>MULI vra, imm8:</strong> Signed multiplication. vra *= imm8.<br />
+Opcode: 0x5C9a<br />
+Cycles: 3<br />
+Flags: See MULI ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVU vra, imm8:</strong> Unsigned division. Stores the remainder in virtual register A1. vra /= imm8.<br />
+Opcode: 0x5CAa<br />
+Cycles: 3<br />
+Flags: See DIVU ra, rb.</p>
+</li>
+<li>
+<p><strong>DIVI vra, imm8:</strong> Signed division. Stores the remainder in virtual register A0. vra /= imm8.<br />
+Opcode: 0x5CBa<br />
+Cycles: 3<br />
+Flags: See DIVI ra, rb.</p>
+</li>
+<li>
+<p><strong>RAND ra:</strong> Fill ra with a pseudorandom LFSR-based random number.<br />
+Opcode: 0x600a<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>RAND bra:</strong> Fill bra with a pseudorandom LFSR-based random number.<br />
+Opcode: 0x601a<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>RAND vra:</strong> Fill vra with a pseudorandom LFSR-based random number.<br />
+Opcode: 0x602a<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>JP imm32:</strong> Jump to address imm32.<br />
+Opcode: 0x8000<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>JR imm32:</strong> Relative jump imm32 (interpreted as a signed integer) bytes forwards/backwards.<br />
+Opcode: 0x8001<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>JPZ imm32:</strong> Jump to address imm32 iff the Zero flag is set.<br />
+Opcode: 0x8002<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JNZ imm32:</strong> .Jump to address imm32 iff the Zero flag is reset.<br />
+Opcode: 0x8003<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JPC imm32:</strong> Jump to address imm32 iff the Carry flag is set.<br />
+Opcode: 0x8004<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JNC imm32:</strong> Jump to address imm32 iff the Carry flag is reset.<br />
+Opcode: 0x8005<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JPO imm32:</strong> Jump to address imm32 iff the Overflow flag is set.<br />
+Opcode: 0x8006<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JNO imm32:</strong> Jump to address imm32 iff the Overflow flag is reset.<br />
+Opcode: 0x8007<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JPP imm32:</strong> Jump to address imm32 iff the Parity flag is set.<br />
+Opcode: 0x8008<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JNP imm32:</strong> Jump to address imm32 iff the Parity flag is reset.<br />
+Opcode: 0x8009<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JPN imm32:</strong> Jump to address imm32 iff the Negative flag is set.<br />
+Opcode: 0x800A<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JNN imm32:</strong> Jump to address imm32 iff the Negative flag is reset.<br />
+Opcode: 0x800B<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>JP bra:</strong> Jump to address bra.<br />
+Opcode: 0x801a<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>JR bra:</strong> Relative jump bra (interpreted as a signed integer) bytes forwards/backwards.<br />
+Opcode: 0x802a<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>JPZ bra:</strong> Jump to address bra iff the Zero flag is set.<br />
+Opcode: 0x803a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>JNZ bra:</strong> Jump to address bra iff the Zero flag is reset.<br />
+Opcode: 0x804a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>JPC bra:</strong> Jump to address bra iff the Carry flag is set.<br />
+Opcode: 0x805a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>JNC bra:</strong> Jump to address bra iff the Carry flag is reset.<br />
+Opcode: 0x806a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>JPO bra:</strong> Jump to address bra iff the Overflow flag is set.<br />
+Opcode: 0x807a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>JNO bra:</strong> Jump to address bra iff the Overflow flag is reset.<br />
+Opcode: 0x808a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>JPP bra:</strong> Jump to address bra iff the Parity flag is set.<br />
+Opcode: 0x809a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>JNP bra:</strong> Jump to address bra iff the Parity flag is reset.<br />
+Opcode: 0x80Aa<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>JPN bra:</strong> Jump to address bra iff the Negative flag is set.<br />
+Opcode: 0x80Ba<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>JNN bra:</strong> Jump to address bra iff the Negative flag is reset.<br />
+Opcode: 0x80Ca<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>CALL imm32:</strong> Push the address of the instruction after CALL imm32 onto the stack, then jump to imm32.<br />
+Opcode: 0x8100<br />
+Cycles: 5</p>
+</li>
+<li>
+<p><strong>CLZ imm32:</strong> Call imm32 if the Zero flag is set.<br />
+Opcode: 0x8101<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CNZ imm32</strong> Call imm32 if the Zero flag is reset.<br />
+Opcode: 0x8102<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CLC imm32</strong> Call imm32 if the Carry flag is set.<br />
+Opcode: 0x8103<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CNC imm32</strong> Call imm32 if the Carry flag is reset.<br />
+Opcode: 0x8104<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CLO imm32</strong> Call imm32 if the Overflow flag is set.<br />
+Opcode: 0x8105<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CNO imm32</strong> Call imm32 if the Overflow flag is reset.<br />
+Opcode: 0x8106<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CLP imm32</strong> Call imm32 if the Parity flag is set.<br />
+Opcode: 0x8107<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CNP imm32</strong> Call imm32 if the Parity flag is reset.<br />
+Opcode: 0x8108<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CLN imm32</strong> Call imm32 if the Negative flag is set.<br />
+Opcode: 0x8109<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CNN imm32</strong> Call imm32 if the Negative flag is reset.<br />
+Opcode: 0x810A<br />
+Cycles: 6</p>
+</li>
+<li>
+<p><strong>CALL bra:</strong> Push the address of the instruction after CALL bra onto the stack, then jump to bra.<br />
+Opcode: 0x811a<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RET:</strong> Return from subroutine, setting the program counter to the value popped off the stack.<br />
+Opcode: 0x8113<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>RTZ:</strong> Return if the Zero flag is set.<br />
+Opcode: 0x8114<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RNZ:</strong> Return if the Zero flag is reset.<br />
+Opcode: 0x8115<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RTC:</strong> Return if the Carry flag is set.<br />
+Opcode: 0x8116<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RNC:</strong> Return if the Carry flag is reset.<br />
+Opcode: 0x8117<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RTO:</strong> Return if the Overflow flag is set.<br />
+Opcode: 0x8118<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RNO:</strong> Return if the Overflow flag is reset.<br />
+Opcode: 0x8119<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RTP:</strong> Return if the Parity flag is set.<br />
+Opcode: 0x811A<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RNP:</strong> Return if the Parity flag is reset.<br />
+Opcode: 0x811B<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RTN:</strong> Return if the Negative flag is set.<br />
+Opcode: 0x811C<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RNN:</strong> Return if the Negative flag is reset.<br />
+Opcode: 0x811D<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>RETI:</strong> Return from subroutine, then enable interrupts.<br />
+Opcode: 0x811E<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>CLZ bra:</strong> Call bra if the Zero flag is set.<br />
+Opcode: 0x812a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CNZ bra:</strong> Call bra if the Zero flag is reset.<br />
+Opcode: 0x813a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CLC bra:</strong> Call bra if the Carry flag is set.<br />
+Opcode: 0x814a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CNC bra:</strong> Call bra if the Carry flag is reset.<br />
+Opcode: 0x815a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CLO bra:</strong> Call bra if the Overflow flag is set.<br />
+Opcode: 0x816a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CNO bra:</strong> Call bra if the Overflow flag is reset.<br />
+Opcode: 0x817a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CLP bra:</strong> Call bra if the Parity flag is set.<br />
+Opcode: 0x818a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CNP bra:</strong> Call bra if the Parity flag is reset.<br />
+Opcode: 0x819a<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CLN bra:</strong> Call bra if the Negative flag is set.<br />
+Opcode: 0x81Aa<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CNN bra:</strong> Call bra if the Negative flag is reset.<br />
+Opcode: 0x81Ba<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>PUSH bra:</strong> Push bra to the stack.<br />
+Opcode: 0x820a<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>POP bra:</strong> Pop the top of the stack into bra.<br />
+Opcode: 0x820(a+3)<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>PEEK bra:</strong> Load the top of the stack into bra without popping off the value.<br />
+Opcode: 0x820(a+6)<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>PUSH imm32:</strong> Push imm32 to the stack.<br />
+Opcode: 0x8209<br />
+Cycles: 4</p>
+</li>
+<li>
+<p><strong>CLV:</strong> Clear VRAM. Resets all bits in VRAM to 0.<br />
+Opcode: 0xFFFB<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>STOP:</strong> Stop the CPU. Essentially a power-off message.<br />
+Opcode: 0xFFFC<br />
+Cycles: 3</p>
+</li>
+<li>
+<p><strong>EI:</strong> Enable interrupts.<br />
+Opcode: 0xFFFD<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>DI:</strong> Disable interrupts.<br />
+Opcode: 0xFFFE<br />
+Cycles: 2</p>
+</li>
+<li>
+<p><strong>HALT:</strong> Halt the CPU, stopping CPU cycles until an external interrupt is received.<br />
+Opcode: 0xFFFF<br />
+Cycles: 2</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="interrupts.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="memory_map.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="interrupts.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="memory_map.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

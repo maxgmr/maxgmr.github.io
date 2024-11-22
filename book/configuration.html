@@ -1,0 +1,334 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuration - MFS-16 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="configuration.html" class="active"><strong aria-hidden="true">2.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="cpu.html"><strong aria-hidden="true">3.</strong> CPU</a></li><li class="chapter-item expanded "><a href="interrupts.html"><strong aria-hidden="true">4.</strong> Interrupts</a></li><li class="chapter-item expanded "><a href="instruction_set.html"><strong aria-hidden="true">5.</strong> Instruction Set</a></li><li class="chapter-item expanded "><a href="memory_map.html"><strong aria-hidden="true">6.</strong> Memory Map</a></li><li class="chapter-item expanded "><a href="io.html"><strong aria-hidden="true">7.</strong> I/O</a></li><li class="chapter-item expanded "><a href="gpu.html"><strong aria-hidden="true">8.</strong> GPU</a></li><li class="chapter-item expanded "><a href="mfs16asm.html"><strong aria-hidden="true">9.</strong> MFS-16 Assembly</a></li><li class="chapter-item expanded "><a href="demo_programs.html"><strong aria-hidden="true">10.</strong> Demo Programs</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">MFS-16 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
+<p>By default, the user configuration file for MFS-16 desktop is found in one of the following locations:</p>
+<ul>
+<li><strong>Linux:</strong> <code>~/.config/mfs16desktop/config.toml</code></li>
+<li><strong>macOS:</strong> <code>/Users/&lt;USER&gt;/Library/Caches/com.maxgmr.mfs16desktop/config.toml</code></li>
+<li><strong>Windows:</strong><code>C:\Users\&lt;USER&gt;\AppData\Roaming\maxgmr\mfs16desktop\config\config.toml</code></li>
+</ul>
+<p>However, this path can be overridden by setting the <code>MFS16DESKTOP_CONFIG</code> environment variable.</p>
+<p><code>config.toml</code> can be edited by opening the file in any text editor. Any missing options will be overwritten by <code>default.toml</code> in the same directory.</p>
+<h2 id="configuration-options"><a class="header" href="#configuration-options">Configuration Options</a></h2>
+<h3 id="path-settings"><a class="header" href="#path-settings">Path Settings</a></h3>
+<ul>
+<li><strong>data_path:</strong> The path to the data directory where files are stored.</li>
+</ul>
+<pre><code class="language-toml">[path_settings]
+data_path = "~/path/to/data/directory"
+</code></pre>
+<h3 id="key-bindings"><a class="header" href="#key-bindings">Key Bindings</a></h3>
+<ul>
+<li><strong>exit:</strong> The key which, when pressed, immediately exits the program. Must be a valid <a href="https://wiki.libsdl.org/SDL3/SDL_Scancode">SDL2 Scancode</a>.</li>
+</ul>
+<pre><code class="language-toml">[key_bindings]
+exit = "Escape"
+
+</code></pre>
+<h3 id="debugger-settings"><a class="header" href="#debugger-settings">Debugger Settings</a></h3>
+<ul>
+<li>
+<p><strong>history_size:</strong> The number of cycles to record before the breakpoint is reached.</p>
+</li>
+<li>
+<p><strong>cycles_after_break:</strong> The number of cycles to record after the breakpoint is reached.</p>
+</li>
+<li>
+<p><strong>mem_ranges:</strong> The ranges of memory to record when keeping track of computer state.</p>
+</li>
+</ul>
+<pre><code class="language-toml">[debugger_settings]
+history_size = 128
+cycles_after_break = 32
+
+[[debugger_settings.mem_ranges]]
+start = 0xFFFFCF
+end = 0xFFFFFF
+
+[[debugger_settings.mem_ranges]]
+...
+
+</code></pre>
+<p>Note that <em>all</em> non-empty break criteria must be satisfied for the debugger to break.</p>
+<ul>
+<li>
+<p><strong>break_criteria.pc_list:</strong> Break if the program counter is any one of the values in the list.</p>
+</li>
+<li>
+<p><strong>break_criteria.ei:</strong> Break if interrupts get enabled.</p>
+</li>
+<li>
+<p><strong>break_criteria.pc_upper_bound:</strong> Break if the program counter is greater than this value.</p>
+</li>
+<li>
+<p><strong>break_criteria.pc_lower_bound:</strong> Break if the program counter is lesser than this value.</p>
+</li>
+<li>
+<p><strong>break_criteria.instr_list:</strong> Break if the current instruction matches any instruction in the list.</p>
+</li>
+<li>
+<p><strong>break_criteria.reg_upper_bounds:</strong> Break if any register in this list is greater than its corresponding value.</p>
+</li>
+<li>
+<p><strong>break_criteria.reg_lower_bounds:</strong> Break if any register in this list is lesser than its corresponding value.</p>
+</li>
+</ul>
+<pre><code class="language-toml">[debugger_settings.break_criteria]
+pc_list = [0x144, 0xABC]
+ei = true
+pc_upper_bound = 0xFFFFFF
+pc_lower_bound = 0x000000
+
+[[debugger_settings.break_criteria.instr_list]]
+CmpVraImm8 = "E0"
+
+[[debugger_settings.break_criteria.instr_list]]
+LdBraRb = ["DE", "C"]
+
+[[debugger_settings.break_criteria.instr_list]]
+BitRaB = ["A", 0]
+
+# OR...
+[debugger_settings.break_criteria]
+instr_list = ["EI"]
+...
+
+[[debugger_settings.break_criteria.reg_upper_bounds]]
+reg = "E"
+val = 0xFFF0
+
+[[debugger_settings.break_criteria.reg_upper_bounds]]
+reg = "L"
+val = 0x1234
+...
+
+[[debugger_settings.break_criteria.reg_lower_bounds]]
+reg = "E"
+val = 0x0200
+...
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="cpu.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="cpu.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

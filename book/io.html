@@ -1,0 +1,484 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>I/O - MFS-16 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">2.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="cpu.html"><strong aria-hidden="true">3.</strong> CPU</a></li><li class="chapter-item expanded "><a href="interrupts.html"><strong aria-hidden="true">4.</strong> Interrupts</a></li><li class="chapter-item expanded "><a href="instruction_set.html"><strong aria-hidden="true">5.</strong> Instruction Set</a></li><li class="chapter-item expanded "><a href="memory_map.html"><strong aria-hidden="true">6.</strong> Memory Map</a></li><li class="chapter-item expanded "><a href="io.html" class="active"><strong aria-hidden="true">7.</strong> I/O</a></li><li class="chapter-item expanded "><a href="gpu.html"><strong aria-hidden="true">8.</strong> GPU</a></li><li class="chapter-item expanded "><a href="mfs16asm.html"><strong aria-hidden="true">9.</strong> MFS-16 Assembly</a></li><li class="chapter-item expanded "><a href="demo_programs.html"><strong aria-hidden="true">10.</strong> Demo Programs</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">MFS-16 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="io"><a class="header" href="#io">I/O</a></h1>
+<h2 id="manual-frame-updates"><a class="header" href="#manual-frame-updates">Manual Frame Updates</a></h2>
+<p>Some programs may want to slow down the frame rate until the frame is ready to be displayed. Do to this, programs can write to write-only address <code>0xFFFF_FFBD</code> to enable manual frame updates.</p>
+<p>When manual frame updates are enabled, the screen will not display the new VRAM state until the program writes to write-only address <code>0xFFFF_FFBB</code>. This triggers a manual frame update, updating the screen to reflect the new VRAM state.</p>
+<p>While manual frame updates prevent issues with flickering or invisible graphics, they can lead to choppy or inconsistent frames, so manual frame updates should only be enabled when needed. Ideally, programs should be aware of their timings and/or update the screen before the next frame.</p>
+<p>Manual frame updates can be disabled again by writing to the write-only address <code>0xFFFF_FFBC</code>.</p>
+<h2 id="keyboard-input"><a class="header" href="#keyboard-input">Keyboard Input</a></h2>
+<p>The keyboard register consists of 64 bytes of memory located at the range [<code>0xFFFF_FFBE</code>-<code>0xFFFF_FFFD</code>]. Each byte corresponds to a physical key on the computer keyboard. When a key's bit is set, that key is currently being pressed. When a key's bit is reset, that key is not currently being pressed.</p>
+<p>The order of bits within the keyboard register matches the order of <a href="https://wiki.libsdl.org/SDL2/SDL_Scancode">SDL2 Scancodes</a>. As stated above, the key name represents the physical key on the keyboard- the resulting value is handled entirely by the given program.</p>
+<div class="table-wrapper"><table><thead><tr><th>Key Name</th><th>Bit Index</th></tr></thead><tbody>
+<tr><td>A</td><td>4</td></tr>
+<tr><td>B</td><td>5</td></tr>
+<tr><td>C</td><td>6</td></tr>
+<tr><td>D</td><td>7</td></tr>
+<tr><td>E</td><td>8</td></tr>
+<tr><td>F</td><td>9</td></tr>
+<tr><td>G</td><td>10</td></tr>
+<tr><td>H</td><td>11</td></tr>
+<tr><td>I</td><td>12</td></tr>
+<tr><td>J</td><td>13</td></tr>
+<tr><td>K</td><td>14</td></tr>
+<tr><td>L</td><td>15</td></tr>
+<tr><td>M</td><td>16</td></tr>
+<tr><td>N</td><td>17</td></tr>
+<tr><td>O</td><td>18</td></tr>
+<tr><td>P</td><td>19</td></tr>
+<tr><td>Q</td><td>20</td></tr>
+<tr><td>R</td><td>21</td></tr>
+<tr><td>S</td><td>22</td></tr>
+<tr><td>T</td><td>23</td></tr>
+<tr><td>U</td><td>24</td></tr>
+<tr><td>V</td><td>25</td></tr>
+<tr><td>W</td><td>26</td></tr>
+<tr><td>X</td><td>27</td></tr>
+<tr><td>Y</td><td>28</td></tr>
+<tr><td>Z</td><td>29</td></tr>
+<tr><td>1</td><td>30</td></tr>
+<tr><td>2</td><td>31</td></tr>
+<tr><td>3</td><td>32</td></tr>
+<tr><td>4</td><td>33</td></tr>
+<tr><td>5</td><td>34</td></tr>
+<tr><td>6</td><td>35</td></tr>
+<tr><td>7</td><td>36</td></tr>
+<tr><td>8</td><td>37</td></tr>
+<tr><td>9</td><td>38</td></tr>
+<tr><td>0</td><td>39</td></tr>
+<tr><td>RETURN</td><td>40</td></tr>
+<tr><td>ESCAPE</td><td>41</td></tr>
+<tr><td>BACKSPACE</td><td>42</td></tr>
+<tr><td>TAB</td><td>43</td></tr>
+<tr><td>SPACE</td><td>44</td></tr>
+<tr><td>MINUS</td><td>45</td></tr>
+<tr><td>EQUALS</td><td>46</td></tr>
+<tr><td>LEFTBRACKET</td><td>47</td></tr>
+<tr><td>RIGHTBRACKET</td><td>48</td></tr>
+<tr><td>BACKSLASH</td><td>49</td></tr>
+<tr><td>NONUSHASH</td><td>50</td></tr>
+<tr><td>SEMICOLON</td><td>51</td></tr>
+<tr><td>APOSTROPHE</td><td>52</td></tr>
+<tr><td>GRAVE</td><td>53</td></tr>
+<tr><td>COMMA</td><td>54</td></tr>
+<tr><td>PERIOD</td><td>55</td></tr>
+<tr><td>SLASH</td><td>56</td></tr>
+<tr><td>CAPSLOCK</td><td>57</td></tr>
+<tr><td>F1</td><td>58</td></tr>
+<tr><td>F2</td><td>59</td></tr>
+<tr><td>F3</td><td>60</td></tr>
+<tr><td>F4</td><td>61</td></tr>
+<tr><td>F5</td><td>62</td></tr>
+<tr><td>F6</td><td>63</td></tr>
+<tr><td>F7</td><td>64</td></tr>
+<tr><td>F8</td><td>65</td></tr>
+<tr><td>F9</td><td>66</td></tr>
+<tr><td>F10</td><td>67</td></tr>
+<tr><td>F11</td><td>68</td></tr>
+<tr><td>F12</td><td>69</td></tr>
+<tr><td>PRINTSCREEN</td><td>70</td></tr>
+<tr><td>SCROLLLOCK</td><td>71</td></tr>
+<tr><td>PAUSE</td><td>72</td></tr>
+<tr><td>INSERT</td><td>73</td></tr>
+<tr><td>HOME</td><td>74</td></tr>
+<tr><td>PAGEUP</td><td>75</td></tr>
+<tr><td>DELETE</td><td>76</td></tr>
+<tr><td>END</td><td>77</td></tr>
+<tr><td>PAGEDOWN</td><td>78</td></tr>
+<tr><td>RIGHT</td><td>79</td></tr>
+<tr><td>LEFT</td><td>80</td></tr>
+<tr><td>DOWN</td><td>81</td></tr>
+<tr><td>UP</td><td>82</td></tr>
+<tr><td>NUMLOCKCLEAR</td><td>83</td></tr>
+<tr><td>KP_DIVIDE</td><td>84</td></tr>
+<tr><td>KP_MULTIPLY</td><td>85</td></tr>
+<tr><td>KP_PLUS</td><td>86</td></tr>
+<tr><td>KP_MINUS</td><td>87</td></tr>
+<tr><td>KP_ENTER</td><td>88</td></tr>
+<tr><td>KP_1</td><td>89</td></tr>
+<tr><td>KP_2</td><td>90</td></tr>
+<tr><td>KP_3</td><td>91</td></tr>
+<tr><td>KP_4</td><td>92</td></tr>
+<tr><td>KP_5</td><td>93</td></tr>
+<tr><td>KP_6</td><td>94</td></tr>
+<tr><td>KP_7</td><td>95</td></tr>
+<tr><td>KP_8</td><td>96</td></tr>
+<tr><td>KP_9</td><td>97</td></tr>
+<tr><td>KP_0</td><td>98</td></tr>
+<tr><td>KP_PERIOD</td><td>99</td></tr>
+<tr><td>NONUSBACKSLASH</td><td>100</td></tr>
+<tr><td>APPLICATION</td><td>101</td></tr>
+<tr><td>POWER</td><td>102</td></tr>
+<tr><td>KP_EQUALS</td><td>103</td></tr>
+<tr><td>F13</td><td>104</td></tr>
+<tr><td>F14</td><td>105</td></tr>
+<tr><td>F15</td><td>106</td></tr>
+<tr><td>F16</td><td>107</td></tr>
+<tr><td>F17</td><td>108</td></tr>
+<tr><td>F18</td><td>109</td></tr>
+<tr><td>F19</td><td>110</td></tr>
+<tr><td>F20</td><td>111</td></tr>
+<tr><td>F21</td><td>112</td></tr>
+<tr><td>F22</td><td>113</td></tr>
+<tr><td>F23</td><td>114</td></tr>
+<tr><td>F24</td><td>115</td></tr>
+<tr><td>EXECUTE</td><td>116</td></tr>
+<tr><td>HELP</td><td>117</td></tr>
+<tr><td>MENU</td><td>118</td></tr>
+<tr><td>SELECT</td><td>119</td></tr>
+<tr><td>STOP</td><td>120</td></tr>
+<tr><td>AGAIN</td><td>121</td></tr>
+<tr><td>UNDO</td><td>122</td></tr>
+<tr><td>CUT</td><td>123</td></tr>
+<tr><td>COPY</td><td>124</td></tr>
+<tr><td>PASTE</td><td>125</td></tr>
+<tr><td>FIND</td><td>126</td></tr>
+<tr><td>MUTE</td><td>127</td></tr>
+<tr><td>VOLUMEUP</td><td>128</td></tr>
+<tr><td>VOLUMEDOWN</td><td>129</td></tr>
+<tr><td>KP_COMMA</td><td>133</td></tr>
+<tr><td>KP_EQUALSAS400</td><td>134</td></tr>
+<tr><td>INTERNATIONAL1</td><td>135</td></tr>
+<tr><td>INTERNATIONAL2</td><td>136</td></tr>
+<tr><td>INTERNATIONAL3</td><td>137</td></tr>
+<tr><td>INTERNATIONAL4</td><td>138</td></tr>
+<tr><td>INTERNATIONAL5</td><td>139</td></tr>
+<tr><td>INTERNATIONAL6</td><td>140</td></tr>
+<tr><td>INTERNATIONAL7</td><td>141</td></tr>
+<tr><td>INTERNATIONAL8</td><td>142</td></tr>
+<tr><td>INTERNATIONAL9</td><td>143</td></tr>
+<tr><td>LANG1</td><td>144</td></tr>
+<tr><td>LANG2</td><td>145</td></tr>
+<tr><td>LANG3</td><td>146</td></tr>
+<tr><td>LANG4</td><td>147</td></tr>
+<tr><td>LANG5</td><td>148</td></tr>
+<tr><td>LANG6</td><td>149</td></tr>
+<tr><td>LANG7</td><td>150</td></tr>
+<tr><td>LANG8</td><td>151</td></tr>
+<tr><td>LANG9</td><td>152</td></tr>
+<tr><td>ALTERASE</td><td>153</td></tr>
+<tr><td>SYSREQ</td><td>154</td></tr>
+<tr><td>CANCEL</td><td>155</td></tr>
+<tr><td>CLEAR</td><td>156</td></tr>
+<tr><td>PRIOR</td><td>157</td></tr>
+<tr><td>RETURN2</td><td>158</td></tr>
+<tr><td>SEPARATOR</td><td>159</td></tr>
+<tr><td>OUT</td><td>160</td></tr>
+<tr><td>OPER</td><td>161</td></tr>
+<tr><td>CLEARAGAIN</td><td>162</td></tr>
+<tr><td>CRSEL</td><td>163</td></tr>
+<tr><td>EXSEL</td><td>164</td></tr>
+<tr><td>KP_00</td><td>176</td></tr>
+<tr><td>KP_000</td><td>177</td></tr>
+<tr><td>THOUSANDSSEPARATOR</td><td>178</td></tr>
+<tr><td>DECIMALSSEPARATOR</td><td>179</td></tr>
+<tr><td>CURRENCYUNIT</td><td>180</td></tr>
+<tr><td>CURRENCYSUBUNIT</td><td>181</td></tr>
+<tr><td>KP_LEFTPAREN</td><td>182</td></tr>
+<tr><td>KP_RIGHTPAREN</td><td>183</td></tr>
+<tr><td>KP_LEFTBRACE</td><td>184</td></tr>
+<tr><td>KP_RIGHTBRACE</td><td>185</td></tr>
+<tr><td>KP_TAB</td><td>186</td></tr>
+<tr><td>KP_BACKSPACE</td><td>187</td></tr>
+<tr><td>KP_A</td><td>188</td></tr>
+<tr><td>KP_B</td><td>189</td></tr>
+<tr><td>KP_C</td><td>190</td></tr>
+<tr><td>KP_D</td><td>191</td></tr>
+<tr><td>KP_E</td><td>192</td></tr>
+<tr><td>KP_F</td><td>193</td></tr>
+<tr><td>KP_XOR</td><td>194</td></tr>
+<tr><td>KP_POWER</td><td>195</td></tr>
+<tr><td>KP_PERCENT</td><td>196</td></tr>
+<tr><td>KP_LESS</td><td>197</td></tr>
+<tr><td>KP_GREATER</td><td>198</td></tr>
+<tr><td>KP_AMPERSAND</td><td>199</td></tr>
+<tr><td>KP_DBLAMPERSAND</td><td>200</td></tr>
+<tr><td>KP_VERTICALBAR</td><td>201</td></tr>
+<tr><td>KP_DBLVERTICALBAR</td><td>202</td></tr>
+<tr><td>KP_COLON</td><td>203</td></tr>
+<tr><td>KP_HASH</td><td>204</td></tr>
+<tr><td>KP_SPACE</td><td>205</td></tr>
+<tr><td>KP_AT</td><td>206</td></tr>
+<tr><td>KP_EXCLAM</td><td>207</td></tr>
+<tr><td>KP_MEMSTORE</td><td>208</td></tr>
+<tr><td>KP_MEMRECALL</td><td>209</td></tr>
+<tr><td>KP_MEMCLEAR</td><td>210</td></tr>
+<tr><td>KP_MEMADD</td><td>211</td></tr>
+<tr><td>KP_MEMSUBTRACT</td><td>212</td></tr>
+<tr><td>KP_MEMMULTIPLY</td><td>213</td></tr>
+<tr><td>KP_MEMDIVIDE</td><td>214</td></tr>
+<tr><td>KP_PLUSMINUS</td><td>215</td></tr>
+<tr><td>KP_CLEAR</td><td>216</td></tr>
+<tr><td>KP_CLEARENTRY</td><td>217</td></tr>
+<tr><td>KP_BINARY</td><td>218</td></tr>
+<tr><td>KP_OCTAL</td><td>219</td></tr>
+<tr><td>KP_DECIMAL</td><td>220</td></tr>
+<tr><td>KP_HEXADECIMAL</td><td>221</td></tr>
+<tr><td>LCTRL</td><td>224</td></tr>
+<tr><td>LSHIFT</td><td>225</td></tr>
+<tr><td>LALT</td><td>226</td></tr>
+<tr><td>LGUI</td><td>227</td></tr>
+<tr><td>RCTRL</td><td>228</td></tr>
+<tr><td>RSHIFT</td><td>229</td></tr>
+<tr><td>RALT</td><td>230</td></tr>
+<tr><td>RGUI</td><td>231</td></tr>
+<tr><td>MODE</td><td>257</td></tr>
+<tr><td>AUDIONEXT</td><td>258</td></tr>
+<tr><td>AUDIOPREV</td><td>259</td></tr>
+<tr><td>AUDIOSTOP</td><td>260</td></tr>
+<tr><td>AUDIOPLAY</td><td>261</td></tr>
+<tr><td>AUDIOMUTE</td><td>262</td></tr>
+<tr><td>MEDIASELECT</td><td>263</td></tr>
+<tr><td>WWW</td><td>264</td></tr>
+<tr><td>MAIL</td><td>265</td></tr>
+<tr><td>CALCULATOR</td><td>266</td></tr>
+<tr><td>COMPUTER</td><td>267</td></tr>
+<tr><td>AC_SEARCH</td><td>268</td></tr>
+<tr><td>AC_HOME</td><td>269</td></tr>
+<tr><td>AC_BACK</td><td>270</td></tr>
+<tr><td>AC_FORWARD</td><td>271</td></tr>
+<tr><td>AC_STOP</td><td>272</td></tr>
+<tr><td>AC_REFRESH</td><td>273</td></tr>
+<tr><td>AC_BOOKMARKS</td><td>274</td></tr>
+<tr><td>BRIGHTNESSDOWN</td><td>275</td></tr>
+<tr><td>BRIGHTNESSUP</td><td>276</td></tr>
+<tr><td>DISPLAYSWITCH</td><td>277</td></tr>
+<tr><td>KBDILLUMTOGGLE</td><td>278</td></tr>
+<tr><td>KBDILLUMDOWN</td><td>279</td></tr>
+<tr><td>KBDILLUMUP</td><td>280</td></tr>
+<tr><td>EJECT</td><td>281</td></tr>
+<tr><td>SLEEP</td><td>282</td></tr>
+<tr><td>APP1</td><td>283</td></tr>
+<tr><td>APP2</td><td>284</td></tr>
+<tr><td>AUDIOREWIND</td><td>285</td></tr>
+<tr><td>AUDIOFASTFORWARD</td><td>286</td></tr>
+<tr><td>SOFTLEFT</td><td>287</td></tr>
+<tr><td>SOFTRIGHT</td><td>288</td></tr>
+<tr><td>CALL</td><td>289</td></tr>
+<tr><td>ENDCALL</td><td>290</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="memory_map.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="gpu.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="memory_map.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="gpu.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

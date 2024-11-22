@@ -1,0 +1,465 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>MFS-16 Assembly - MFS-16 Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">2.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="cpu.html"><strong aria-hidden="true">3.</strong> CPU</a></li><li class="chapter-item expanded "><a href="interrupts.html"><strong aria-hidden="true">4.</strong> Interrupts</a></li><li class="chapter-item expanded "><a href="instruction_set.html"><strong aria-hidden="true">5.</strong> Instruction Set</a></li><li class="chapter-item expanded "><a href="memory_map.html"><strong aria-hidden="true">6.</strong> Memory Map</a></li><li class="chapter-item expanded "><a href="io.html"><strong aria-hidden="true">7.</strong> I/O</a></li><li class="chapter-item expanded "><a href="gpu.html"><strong aria-hidden="true">8.</strong> GPU</a></li><li class="chapter-item expanded "><a href="mfs16asm.html" class="active"><strong aria-hidden="true">9.</strong> MFS-16 Assembly</a></li><li class="chapter-item expanded "><a href="demo_programs.html"><strong aria-hidden="true">10.</strong> Demo Programs</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">MFS-16 Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="mfs-16-assembly"><a class="header" href="#mfs-16-assembly">MFS-16 Assembly</a></h1>
+<p>MFS-16 assembly language shares many similarities with other variants of assembly, but has some features that make it unique.</p>
+<h2 id="comments"><a class="header" href="#comments">Comments</a></h2>
+<p>Comments can be single-line...</p>
+<pre><code>// Hello, I'm a comment. I am ignored by the MFS-16 assembler.
+</code></pre>
+<p>... or multi-line.</p>
+<pre><code>/*
+    This is a big, multiline comment.
+
+    It can be as long as you want.
+*/
+</code></pre>
+<p>They can be located at any point in the line.</p>
+<pre><code>LD A,B; // This loads register B into register A.
+</code></pre>
+<h2 id="variables"><a class="header" href="#variables">Variables</a></h2>
+<p>Variables may be assigned at any point with the following format:</p>
+<pre><code>variable_name = number:data_type;
+</code></pre>
+<p>Since a semicolon ends the statement, variable assignments may be multiple lines.</p>
+<p>Variable assignments do not take up any space in the final binary.</p>
+<p>Valid variable names consist of alphanumeric characters, underscores, and numbers, but they cannot start with a number.</p>
+<pre><code>// OK!
+my_variable = 255;
+
+// NO! Must not start with a number.
+12_my_variable = 254;
+
+// NO! Illegal characters in variable name.
+my+variable = 253;
+</code></pre>
+<p>After assignment, variables can be used in place of literal values (u4, imm8, imm16, imm32, etc.):</p>
+<pre><code>// This...
+my_variable = 255;
+ld A1,my_variable;
+
+// ...does the same thing as this.
+ld A1,255;
+</code></pre>
+<h2 id="literals"><a class="header" href="#literals">Literals</a></h2>
+<p>The data types of numbers must be explicitly specified by following the number with a colon, then a single letter denoting the data type. MFS-16 assembly supports four data types:</p>
+<ul>
+<li>
+<p><strong><code>:b</code> (byte)</strong>: An 8-bit value. If no data type is given, the assembler will assume the value is a byte (and fail if the value is too large to be a byte!). Can be used with 8-bit virtual registers (A1, A0, B1, etc.).</p>
+</li>
+<li>
+<p><strong><code>:w</code> (word)</strong>: A 16-bit value. Used with 16-bit registers (A, B, C, etc.).</p>
+</li>
+<li>
+<p><strong><code>:d</code> (double word)</strong>: A 32-bit value. Used with 32-bit registers (BC, DE, HL).</p>
+</li>
+<li>
+<p><strong><code>:q</code> (quad word)</strong>: A 64-bit value.</p>
+</li>
+</ul>
+<p>Decimal, binary, hexadecimal, and octal notation are all supported, and underscores may be used anywhere to visually separate the digits:</p>
+<pre><code>// OK!
+ADD B0,123;
+
+// OK!
+CMP 0x1234:d, DE;
+
+// OK!
+my_double = 1_234_567_890:d;
+
+// OK!
+my_byte = 0xAB;
+
+// OK!
+MY_OTHER_BYTE_1234 = 0xCD:b;
+
+// OK!
+myoctalword = 0o780:w;
+
+// OK!
+a_quad
+    = 0b_0101_0101_0101_0101_0101:q;
+
+// NO! value is too large to be a byte.
+my_byte_4 = 0x100:b;
+</code></pre>
+<h2 id="registers"><a class="header" href="#registers">Registers</a></h2>
+<p>The registers can be referenced by their (case-sensitive) names.</p>
+<ul>
+<li>
+<p><strong>16-bit Registers:</strong> <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code>, <code>E</code>, <code>H</code>, <code>L</code></p>
+</li>
+<li>
+<p><strong>32-bit Big Registers:</strong> <code>BC</code>, <code>DE</code>, <code>HL</code></p>
+</li>
+<li>
+<p><strong>8-bit Virtual Registers:</strong> <code>A1</code>, <code>A0</code>, <code>B1</code>, <code>B0</code>, <code>C1</code>, <code>C0</code>, <code>D1</code>, <code>D0</code>, <code>E1</code>, <code>E0</code>, <code>H1</code>, <code>H0</code>, <code>L1</code>, <code>L0</code></p>
+</li>
+</ul>
+<p>These names are reserved and cannot be used as variable names.</p>
+<h2 id="instructions"><a class="header" href="#instructions">Instructions</a></h2>
+<p>Instructions are based around the following format:</p>
+<pre><code>mnemonic [operand], [operand];
+</code></pre>
+<p>They always consist of the instruction mnemonic, optionally followed by its operands (separated by commas), and always ending with a semicolon.</p>
+<p>Mnemonics are case-insensitive.</p>
+<p>They can be spread across multiple lines because unlike other assembly variants, semicolons signal the end of the instruction:</p>
+<pre><code>// OK!
+ld A, B;
+
+// OK!
+ld
+    A,
+    B;
+
+// OK!
+ld  A,  B;
+</code></pre>
+<p>Here are some more examples of instructions:</p>
+<pre><code>halt;
+
+ld [0x0012_3456:d],BC;
+
+JP my_address;
+
+InC DE;
+</code></pre>
+<h2 id="dereferences"><a class="header" href="#dereferences">Dereferences</a></h2>
+<p>Brackets <code>[</code>, <code>]</code> are used to dereference addresses:</p>
+<pre><code>// Load my_word into memory at address BC
+LD [BC],my_word;
+
+// Load the value stored at address HL into A
+LD A,[HL];
+</code></pre>
+<h2 id="named-labels"><a class="header" href="#named-labels">Named Labels</a></h2>
+<p>Named labels are globally-scoped identifiers that point to a specific location in the program ROM. Internally, the labels are 32-bit memory addresses which can be jumped to and referenced in other ways like a normal double word variable. The assembler places them as early as possible within memory.</p>
+<p>Named labels follow the same rules for variable names and they take the following format:</p>
+<pre><code>label_name:
+</code></pre>
+<p>Their scope extends across all files used to assemble the final binary, and can be referenced before or after their declaration.</p>
+<p>In the following example, the program counter travels from locations 1-4 in order:</p>
+<pre><code>// LOCATION 1 (START)
+jp start;
+
+// LOCATION 2
+start:
+jp label_2;
+
+// LOCATION 4 (FINISH)
+label_1:
+stop;
+
+// LOCATION 3
+label_2:
+jp label_1;
+
+</code></pre>
+<h2 id="explicit-labels"><a class="header" href="#explicit-labels">Explicit Labels</a></h2>
+<p>Exact addresses in memory can be denoted through explicit labels. They follow the same format and scope as named labels, but they are double word literals instead of variable names:</p>
+<pre><code>// The assembled binary code after this label starts at address 0x200 in memory.
+0x0200:d:
+// This instruction will be located at address 0x200 in memory.
+ld A1,123;
+</code></pre>
+<p>They are commonly used for interrupt handlers, because CPU interrupts always jump to the same memory address:</p>
+<pre><code>0x100:d:
+    // Handle frame interrupts
+    call my_frame_function;
+reti;
+
+0x200:d:
+    // Handle keyboard interrupts
+    call do_something_when_keys_pressed;
+reti;
+</code></pre>
+<p>Keep in mind that the assembler will fail if there is an explicit label that is too small:</p>
+<pre><code>// OK! Since this is the start of the ROM, the first two bytes are simply empty.
+0x00_0002:d:
+ld A,0x123:w;
+ld B,0x456:w;
+add A,B;
+/*
+    NO! The instructions above start at 0x00_0002 and take up more than two bytes
+    of memory. 0x00_0004 is too small of a value.
+*/
+0x00_0004:
+divu A,B;
+</code></pre>
+<p>This also means that the order in which you give your files to the assembler matters- since files are assembled sequentially, the explicit labels of files later on in the sequence must take the size of files earlier in the sequence into account when definint explicit labels.</p>
+<h2 id="raw-byte-arrays"><a class="header" href="#raw-byte-arrays">Raw Byte Arrays</a></h2>
+<p>Raw bytes can be defined at any point in memory through raw byte arrays. Raw byte arrays have the following format:</p>
+<pre><code>[
+  [bytes],
+]
+</code></pre>
+<p>The bytes can be variables, the type suffix can be omitted, and commas are optional:</p>
+<pre><code>// OK!
+[ 0x01:b, 0x23:b, 0x45:b ]
+
+// OK!
+[ 1, 0x23, 0x45 ]
+
+// OK!
+[
+    0x01
+    0x23
+    0x45
+]
+
+// OK!
+b1 = 0x01;
+b2 = 0x23:b;
+b3 = 0x45;
+[ b1 b2 b3 ]
+</code></pre>
+<p>They are typically used in tandem with explicit labels in order to define some static data in ROM for future usage, such as raw bitmap data:</p>
+<pre><code>// Set DE to the start of sprite data
+ld DE, sprite_data;
+// Set HL to the start of VRAM
+ld HL, 0x0100_0000:d;
+// Write sprite data to VRAM
+ldi BC,[DE];
+vldi [HL],BC;
+ldi BC,[DE];
+vldi [HL],BC;
+
+0x0000_1000:d:
+sprite_data:
+[
+    0x12 0x34 0x56 0x78 0x9A 0xBC 0xDE 0xF0
+]
+</code></pre>
+<h2 id="assembler"><a class="header" href="#assembler">Assembler</a></h2>
+<p>The assembler is given a list of files to assemble. The order of the files matters, as the files are simply appended to each other and processed accordingly.</p>
+<p>In the following example, <code>another_file.mfs16</code> is appended to the end of <code>file.mfs16</code>. Any variable assignments in <code>file.mfs16</code> apply to <code>another_file.mfs16</code>, but they can be overwritten!</p>
+<pre><code class="language-sh">mfs16assembler path/to/file.mfs16 path/to/another_file.mfs16
+</code></pre>
+<p>If the assembler is not given an output file, it sends the resulting binary to stdout. An output file can be given using the <code>-o</code> option:</p>
+<pre><code class="language-sh">mfs16assembler my_program.mfs16 -o bin/my_program
+</code></pre>
+<p>The assembler won't overwrite existing files by default. This behaviour can be overridden by adding the <code>-f</code> flag.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="gpu.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="demo_programs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="gpu.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="demo_programs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
