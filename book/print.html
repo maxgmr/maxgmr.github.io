@@ -1651,52 +1651,52 @@ Cycles: 4</p>
 <li>
 <p><strong>JPZ imm32:</strong> Jump to address imm32 iff the Zero flag is set.<br />
 Opcode: 0x8002<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNZ imm32:</strong> .Jump to address imm32 iff the Zero flag is reset.<br />
 Opcode: 0x8003<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JPC imm32:</strong> Jump to address imm32 iff the Carry flag is set.<br />
 Opcode: 0x8004<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNC imm32:</strong> Jump to address imm32 iff the Carry flag is reset.<br />
 Opcode: 0x8005<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JPO imm32:</strong> Jump to address imm32 iff the Overflow flag is set.<br />
 Opcode: 0x8006<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNO imm32:</strong> Jump to address imm32 iff the Overflow flag is reset.<br />
 Opcode: 0x8007<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JPP imm32:</strong> Jump to address imm32 iff the Parity flag is set.<br />
 Opcode: 0x8008<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNP imm32:</strong> Jump to address imm32 iff the Parity flag is reset.<br />
 Opcode: 0x8009<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JPN imm32:</strong> Jump to address imm32 iff the Negative flag is set.<br />
 Opcode: 0x800A<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNN imm32:</strong> Jump to address imm32 iff the Negative flag is reset.<br />
 Opcode: 0x800B<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JP bra:</strong> Jump to address bra.<br />
@@ -1711,107 +1711,107 @@ Cycles: 2</p>
 <li>
 <p><strong>JPZ bra:</strong> Jump to address bra iff the Zero flag is set.<br />
 Opcode: 0x803a<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNZ bra:</strong> Jump to address bra iff the Zero flag is reset.<br />
 Opcode: 0x804a<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JPC bra:</strong> Jump to address bra iff the Carry flag is set.<br />
 Opcode: 0x805a<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNC bra:</strong> Jump to address bra iff the Carry flag is reset.<br />
 Opcode: 0x806a<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JPO bra:</strong> Jump to address bra iff the Overflow flag is set.<br />
 Opcode: 0x807a<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNO bra:</strong> Jump to address bra iff the Overflow flag is reset.<br />
 Opcode: 0x808a<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JPP bra:</strong> Jump to address bra iff the Parity flag is set.<br />
 Opcode: 0x809a<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNP bra:</strong> Jump to address bra iff the Parity flag is reset.<br />
 Opcode: 0x80Aa<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JPN bra:</strong> Jump to address bra iff the Negative flag is set.<br />
 Opcode: 0x80Ba<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>JNN bra:</strong> Jump to address bra iff the Negative flag is reset.<br />
 Opcode: 0x80Ca<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CALL imm32:</strong> Push the address of the instruction after CALL imm32 onto the stack, then jump to imm32.<br />
 Opcode: 0x8100<br />
-Cycles: 5</p>
+Cycles: 5 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CLZ imm32:</strong> Call imm32 if the Zero flag is set.<br />
 Opcode: 0x8101<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNZ imm32</strong> Call imm32 if the Zero flag is reset.<br />
 Opcode: 0x8102<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CLC imm32</strong> Call imm32 if the Carry flag is set.<br />
 Opcode: 0x8103<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNC imm32</strong> Call imm32 if the Carry flag is reset.<br />
 Opcode: 0x8104<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CLO imm32</strong> Call imm32 if the Overflow flag is set.<br />
 Opcode: 0x8105<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNO imm32</strong> Call imm32 if the Overflow flag is reset.<br />
 Opcode: 0x8106<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CLP imm32</strong> Call imm32 if the Parity flag is set.<br />
 Opcode: 0x8107<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNP imm32</strong> Call imm32 if the Parity flag is reset.<br />
 Opcode: 0x8108<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CLN imm32</strong> Call imm32 if the Negative flag is set.<br />
 Opcode: 0x8109<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNN imm32</strong> Call imm32 if the Negative flag is reset.<br />
 Opcode: 0x810A<br />
-Cycles: 6</p>
+Cycles: 6 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CALL bra:</strong> Push the address of the instruction after CALL bra onto the stack, then jump to bra.<br />
@@ -1826,52 +1826,52 @@ Cycles: 2</p>
 <li>
 <p><strong>RTZ:</strong> Return if the Zero flag is set.<br />
 Opcode: 0x8114<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RNZ:</strong> Return if the Zero flag is reset.<br />
 Opcode: 0x8115<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RTC:</strong> Return if the Carry flag is set.<br />
 Opcode: 0x8116<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RNC:</strong> Return if the Carry flag is reset.<br />
 Opcode: 0x8117<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RTO:</strong> Return if the Overflow flag is set.<br />
 Opcode: 0x8118<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RNO:</strong> Return if the Overflow flag is reset.<br />
 Opcode: 0x8119<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RTP:</strong> Return if the Parity flag is set.<br />
 Opcode: 0x811A<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RNP:</strong> Return if the Parity flag is reset.<br />
 Opcode: 0x811B<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RTN:</strong> Return if the Negative flag is set.<br />
 Opcode: 0x811C<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RNN:</strong> Return if the Negative flag is reset.<br />
 Opcode: 0x811D<br />
-Cycles: 3</p>
+Cycles: 3 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>RETI:</strong> Return from subroutine, then enable interrupts.<br />
@@ -1881,52 +1881,52 @@ Cycles: 3</p>
 <li>
 <p><strong>CLZ bra:</strong> Call bra if the Zero flag is set.<br />
 Opcode: 0x812a<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNZ bra:</strong> Call bra if the Zero flag is reset.<br />
 Opcode: 0x813a<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CLC bra:</strong> Call bra if the Carry flag is set.<br />
 Opcode: 0x814a<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNC bra:</strong> Call bra if the Carry flag is reset.<br />
 Opcode: 0x815a<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CLO bra:</strong> Call bra if the Overflow flag is set.<br />
 Opcode: 0x816a<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNO bra:</strong> Call bra if the Overflow flag is reset.<br />
 Opcode: 0x817a<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CLP bra:</strong> Call bra if the Parity flag is set.<br />
 Opcode: 0x818a<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNP bra:</strong> Call bra if the Parity flag is reset.<br />
 Opcode: 0x819a<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CLN bra:</strong> Call bra if the Negative flag is set.<br />
 Opcode: 0x81Aa<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>CNN bra:</strong> Call bra if the Negative flag is reset.<br />
 Opcode: 0x81Ba<br />
-Cycles: 4</p>
+Cycles: 4 if satisfied, else 2</p>
 </li>
 <li>
 <p><strong>PUSH bra:</strong> Push bra to the stack.<br />
