@@ -184,6 +184,9 @@
 <li>
 <p><strong>Keyboard:</strong> When <em>any</em> bit in the keyboard register changes from 0 to 1, the Keyboard interrupt is triggered.</p>
 </li>
+<li>
+<p><strong>Error:</strong> When <em>any</em> bit in the error register changes from 0 to 1, (i.e., an error occurs), the Error interrupt is triggered.</p>
+</li>
 </ul>
 <h2 id="interrupt-handling-logic"><a class="header" href="#interrupt-handling-logic">Interrupt Handling Logic</a></h2>
 <p>The CPU performs the following actions every cycle:</p>
@@ -218,8 +221,8 @@
 <p>Each bit of this 1-byte register corresponds to a different type of interrupt. A set bit means that the corresponding interrupt is enabled and can therefore be handled by the CPU, and vice versa.</p>
 <p>The interrupt at bit 0 is handled with the highest priority, and the interrupt at bit 7 is handled with the lowest priority.</p>
 <p>This register must be set explicitly by writing to address <code>0xFFFF_FFFE</code>.</p>
-<div class="table-wrapper"><table><thead><tr><th>7 6 5 4 3 2</th><th>1</th><th>0</th></tr></thead><tbody>
-<tr><td></td><td>Keyboard</td><td>Frame</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>7 6 5 4 3</th><th>2</th><th>1</th><th>0</th></tr></thead><tbody>
+<tr><td></td><td>Error</td><td>Keyboard</td><td>Frame</td></tr>
 </tbody></table>
 </div>
 <h2 id="interrupt-register"><a class="header" href="#interrupt-register">Interrupt Register</a></h2>

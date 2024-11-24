@@ -181,6 +181,7 @@
 <tr><td>0x0000_0000</td><td>0x007F_FFFF</td><td>8 MiB</td><td>Read-only memory (ROM). Used for loaded programs currently being executed.</td></tr>
 <tr><td>0x0080_0000</td><td>0x00FF_FFFF</td><td>8 MiB</td><td>Random-access memory (RAM). General-purpose memory which can be read from or written to.</td></tr>
 <tr><td>0x0100_0000</td><td>0x0102_5800</td><td>150 KiB</td><td>Video RAM (VRAM). Used for setting the pixels of the screen.</td></tr>
+<tr><td>0xFFFF_FFBA</td><td>0xFFFF_FFBA</td><td>1 B</td><td>Error register. Write-only. Each bit corresponds to a triggered non-fatal error.</td></tr>
 <tr><td>0xFFFF_FFBB</td><td>0xFFFF_FFBB</td><td>1 B</td><td>Manual frame update address. Write-only. Write to this address to send a manual frame update.</td></tr>
 <tr><td>0xFFFF_FFBC</td><td>0xFFFF_FFBC</td><td>1 B</td><td>Disable manual frame updates address. Write-only. Write to this address to disable manual frame updates.</td></tr>
 <tr><td>0xFFFF_FFBD</td><td>0xFFFF_FFBD</td><td>1 B</td><td>Enable manual frame updates address. Write-only. Write to this address to enable manual frame updates.</td></tr>

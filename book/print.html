@@ -323,6 +323,9 @@ val = 0x0200
 <li>
 <p><strong>Keyboard:</strong> When <em>any</em> bit in the keyboard register changes from 0 to 1, the Keyboard interrupt is triggered.</p>
 </li>
+<li>
+<p><strong>Error:</strong> When <em>any</em> bit in the error register changes from 0 to 1, (i.e., an error occurs), the Error interrupt is triggered.</p>
+</li>
 </ul>
 <h2 id="interrupt-handling-logic"><a class="header" href="#interrupt-handling-logic">Interrupt Handling Logic</a></h2>
 <p>The CPU performs the following actions every cycle:</p>
@@ -357,8 +360,8 @@ val = 0x0200
 <p>Each bit of this 1-byte register corresponds to a different type of interrupt. A set bit means that the corresponding interrupt is enabled and can therefore be handled by the CPU, and vice versa.</p>
 <p>The interrupt at bit 0 is handled with the highest priority, and the interrupt at bit 7 is handled with the lowest priority.</p>
 <p>This register must be set explicitly by writing to address <code>0xFFFF_FFFE</code>.</p>
-<div class="table-wrapper"><table><thead><tr><th>7 6 5 4 3 2</th><th>1</th><th>0</th></tr></thead><tbody>
-<tr><td></td><td>Keyboard</td><td>Frame</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>7 6 5 4 3</th><th>2</th><th>1</th><th>0</th></tr></thead><tbody>
+<tr><td></td><td>Error</td><td>Keyboard</td><td>Frame</td></tr>
 </tbody></table>
 </div>
 <h2 id="interrupt-register"><a class="header" href="#interrupt-register">Interrupt Register</a></h2>
@@ -1979,6 +1982,7 @@ Cycles: 2</p>
 <tr><td>0x0000_0000</td><td>0x007F_FFFF</td><td>8 MiB</td><td>Read-only memory (ROM). Used for loaded programs currently being executed.</td></tr>
 <tr><td>0x0080_0000</td><td>0x00FF_FFFF</td><td>8 MiB</td><td>Random-access memory (RAM). General-purpose memory which can be read from or written to.</td></tr>
 <tr><td>0x0100_0000</td><td>0x0102_5800</td><td>150 KiB</td><td>Video RAM (VRAM). Used for setting the pixels of the screen.</td></tr>
+<tr><td>0xFFFF_FFBA</td><td>0xFFFF_FFBA</td><td>1 B</td><td>Error register. Write-only. Each bit corresponds to a triggered non-fatal error.</td></tr>
 <tr><td>0xFFFF_FFBB</td><td>0xFFFF_FFBB</td><td>1 B</td><td>Manual frame update address. Write-only. Write to this address to send a manual frame update.</td></tr>
 <tr><td>0xFFFF_FFBC</td><td>0xFFFF_FFBC</td><td>1 B</td><td>Disable manual frame updates address. Write-only. Write to this address to disable manual frame updates.</td></tr>
 <tr><td>0xFFFF_FFBD</td><td>0xFFFF_FFBD</td><td>1 B</td><td>Enable manual frame updates address. Write-only. Write to this address to enable manual frame updates.</td></tr>
@@ -1987,12 +1991,23 @@ Cycles: 2</p>
 <tr><td>0xFFFF_FFFF</td><td>0xFFFF_FFFF</td><td>1 B</td><td>Interrupt register. Each bit corresponds to a different interrupt. If an interrupt's bit is set, then it has been triggered.</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="io"><a class="header" href="#io">I/O</a></h1>
-<h2 id="manual-frame-updates"><a class="header" href="#manual-frame-updates">Manual Frame Updates</a></h2>
+<h2 id="error-register-0xffff_ffba"><a class="header" href="#error-register-0xffff_ffba">Error Register (0xFFFF_FFBA)</a></h2>
+<p>Bits in the error register get set if a non-fatal error occurs during program execution. This register is read-only, and reading the register resets all the bits back to 0.</p>
+<p>This register is typically used for error handling and user-friendly error reports.</p>
+<h3 id="error-types"><a class="header" href="#error-types">Error Types:</a></h3>
+<p>-<strong>IllegalRead:</strong> This bit is set when a program attempts to read from write-only memory or an unused memory address.</p>
+<p>-<strong>IllegalWrite:</strong> This bit is set when a program attempts to write to read-only memory or an unused memory address.</p>
+<p>Each bit corresponds to a different error:</p>
+<div class="table-wrapper"><table><thead><tr><th>7 6 5 4 3 2</th><th>1</th><th>0</th></tr></thead><tbody>
+<tr><td></td><td>IllegalWrite</td><td>IllegalRead</td></tr>
+</tbody></table>
+</div>
+<h2 id="manual-frame-updates-0xffff_ffbb-0xffff_ffbd"><a class="header" href="#manual-frame-updates-0xffff_ffbb-0xffff_ffbd">Manual Frame Updates (0xFFFF_FFBB-0xFFFF_FFBD)</a></h2>
 <p>Some programs may want to slow down the frame rate until the frame is ready to be displayed. Do to this, programs can write to write-only address <code>0xFFFF_FFBD</code> to enable manual frame updates.</p>
 <p>When manual frame updates are enabled, the screen will not display the new VRAM state until the program writes to write-only address <code>0xFFFF_FFBB</code>. This triggers a manual frame update, updating the screen to reflect the new VRAM state.</p>
 <p>While manual frame updates prevent issues with flickering or invisible graphics, they can lead to choppy or inconsistent frames, so manual frame updates should only be enabled when needed. Ideally, programs should be aware of their timings and/or update the screen before the next frame.</p>
 <p>Manual frame updates can be disabled again by writing to the write-only address <code>0xFFFF_FFBC</code>.</p>
-<h2 id="keyboard-input"><a class="header" href="#keyboard-input">Keyboard Input</a></h2>
+<h2 id="keyboard-input-0xffff_ffbe---0xffff_fffd"><a class="header" href="#keyboard-input-0xffff_ffbe---0xffff_fffd">Keyboard Input (0xFFFF_FFBE - 0xFFFF_FFFD)</a></h2>
 <p>The keyboard register consists of 64 bytes of memory located at the range [<code>0xFFFF_FFBE</code>-<code>0xFFFF_FFFD</code>]. Each byte corresponds to a physical key on the computer keyboard. When a key's bit is set, that key is currently being pressed. When a key's bit is reset, that key is not currently being pressed.</p>
 <p>The order of bits within the keyboard register matches the order of <a href="https://wiki.libsdl.org/SDL2/SDL_Scancode">SDL2 Scancodes</a>. As stated above, the key name represents the physical key on the keyboard- the resulting value is handled entirely by the given program.</p>
 <div class="table-wrapper"><table><thead><tr><th>Key Name</th><th>Bit Index</th></tr></thead><tbody>
