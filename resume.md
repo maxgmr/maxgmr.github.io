@@ -8,6 +8,11 @@ A more detailed résumé can be provided upon request.
 
 ## Employment
 
+### Software & Business Intelligence Analyst (Oct 2024-Present)
+
+- Software development, data collection, and analysis.
+- Development, maintenance, and improvement of Python and JavaScript web scrapers and database management tools.
+
 ### Software & Business Intelligence Intern (Jan-Aug 2022, May-Dec 2023)
 
 - Full-time work for a SaaS startup.
