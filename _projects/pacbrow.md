@@ -1,7 +1,7 @@
 ---
 name: pacbrow
 languages: Rust
-blurb: "Terminal browser of installed packages."
+blurb: "Terminal browser of installed pacman packages."
 date: 24-06-01
 ---
 
