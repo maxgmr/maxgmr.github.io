@@ -188,6 +188,22 @@
 <p>However, this path can be overridden by setting the <code>MFS16DESKTOP_CONFIG</code> environment variable.</p>
 <p><code>config.toml</code> can be edited by opening the file in any text editor. Any missing options will be overwritten by <code>default.toml</code> in the same directory.</p>
 <h2 id="configuration-options"><a class="header" href="#configuration-options">Configuration Options</a></h2>
+<h3 id="palette-settings"><a class="header" href="#palette-settings">Palette Settings</a></h3>
+<ul>
+<li>
+<p><strong>preset_palette:</strong> The preset MFS-16 colour palette to be used.</p>
+<p>This allows for easy switching between certain predefined colour schemes. The preset palettes are defined in the table below- simply replace the string in the config file with any one of the preset names in the table.</p>
+</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>Preset Name</th></tr></thead><tbody>
+<tr><td>default</td></tr>
+<tr><td>gruvbox</td></tr>
+<tr><td>gruvbox_light</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-toml">[palette_settings]
+preset_palette = "Gruvbox" # case-insensitive
+</code></pre>
 <h3 id="path-settings"><a class="header" href="#path-settings">Path Settings</a></h3>
 <ul>
 <li><strong>data_path:</strong> The path to the data directory where files are stored.</li>
