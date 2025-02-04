@@ -188,17 +188,20 @@
 <p>A number from 0-255 denoting the drive number.</p>
 <h3 id="0x110x20---drive-name"><a class="header" href="#0x110x20---drive-name">0x11..=0x20 - Drive Name</a></h3>
 <p>The name of the drive. Up to 16 characters of ASCII-encoded text. A <code>null</code> byte signals an early end to the name.</p>
-<h3 id="0x210x28---drive-size"><a class="header" href="#0x210x28---drive-size">0x21..=0x28 - Drive Size</a></h3>
-<p>The size of the drive in bytes, stored little-endian.</p>
-<h3 id="0x29---flags"><a class="header" href="#0x29---flags">0x29 - Flags</a></h3>
+<h3 id="0x210x22---block-size"><a class="header" href="#0x210x22---block-size">0x21..=0x22 - Block Size</a></h3>
+<p>The number of bytes per block, stored little-endian.</p>
+<h3 id="0x230x24---block-count"><a class="header" href="#0x230x24---block-count">0x23..=0x24 - Block Count</a></h3>
+<p>The number of blocks on the drive, stored little-endian.</p>
+<h3 id="0x25---drive-flags"><a class="header" href="#0x25---drive-flags">0x25 - Drive Flags</a></h3>
 <p>The flags of the drive device itself. Each bit corresponds to a given flag:</p>
-<div class="table-wrapper"><table><thead><tr><th>7 6 5 4 3 2</th><th>1</th><th>0</th></tr></thead><tbody>
-<tr><td></td><td>WriteFail</td><td>ReadFail</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>7 6 5 4 3</th><th>2</th><th>1</th><th>0</th></tr></thead><tbody>
+<tr><td></td><td>Busy</td><td>WriteFail</td><td>ReadFail</td></tr>
 </tbody></table>
 </div>
 <ul>
 <li><strong>ReadFail</strong>: This flag is set if a read operation failed.</li>
 <li><strong>WriteFail</strong>: This flag is set if a write operation failed.</li>
+<li><strong>Busy</strong>: This flag is set if the drive is currently performing an operation.</li>
 </ul>
 
                     </main>
