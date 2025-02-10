@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Drives - MFS-16 Documentation</title>
+        <title>Quick Start - MFS-16 Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="quick_start.html"><strong aria-hidden="true">2.</strong> Quick Start</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="cpu.html"><strong aria-hidden="true">4.</strong> CPU</a></li><li class="chapter-item expanded "><a href="interrupts.html"><strong aria-hidden="true">5.</strong> Interrupts</a></li><li class="chapter-item expanded "><a href="instruction_set.html"><strong aria-hidden="true">6.</strong> Instruction Set</a></li><li class="chapter-item expanded "><a href="memory_map.html"><strong aria-hidden="true">7.</strong> Memory Map</a></li><li class="chapter-item expanded "><a href="io.html"><strong aria-hidden="true">8.</strong> I/O</a></li><li class="chapter-item expanded "><a href="drives.html" class="active"><strong aria-hidden="true">9.</strong> Drives</a></li><li class="chapter-item expanded "><a href="gpu.html"><strong aria-hidden="true">10.</strong> GPU</a></li><li class="chapter-item expanded "><a href="mfs16asm.html"><strong aria-hidden="true">11.</strong> MFS-16 Assembly</a></li><li class="chapter-item expanded "><a href="demo_programs.html"><strong aria-hidden="true">12.</strong> Demo Programs</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="quick_start.html" class="active"><strong aria-hidden="true">2.</strong> Quick Start</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="cpu.html"><strong aria-hidden="true">4.</strong> CPU</a></li><li class="chapter-item expanded "><a href="interrupts.html"><strong aria-hidden="true">5.</strong> Interrupts</a></li><li class="chapter-item expanded "><a href="instruction_set.html"><strong aria-hidden="true">6.</strong> Instruction Set</a></li><li class="chapter-item expanded "><a href="memory_map.html"><strong aria-hidden="true">7.</strong> Memory Map</a></li><li class="chapter-item expanded "><a href="io.html"><strong aria-hidden="true">8.</strong> I/O</a></li><li class="chapter-item expanded "><a href="drives.html"><strong aria-hidden="true">9.</strong> Drives</a></li><li class="chapter-item expanded "><a href="gpu.html"><strong aria-hidden="true">10.</strong> GPU</a></li><li class="chapter-item expanded "><a href="mfs16asm.html"><strong aria-hidden="true">11.</strong> MFS-16 Assembly</a></li><li class="chapter-item expanded "><a href="demo_programs.html"><strong aria-hidden="true">12.</strong> Demo Programs</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,46 +173,21 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="drives"><a class="header" href="#drives">Drives</a></h1>
-<p>Virtual MFS-16 hard drives are stored as the original <code>.mfsd</code> (MFS-Drive) file format.</p>
-<h2 id="location"><a class="header" href="#location">Location</a></h2>
-<p>By default, the virtual hard drive files can be found in one of the following locations:</p>
-<ul>
-<li><strong>Linux:</strong> <code>~/.local/share/mfs16desktop/</code></li>
-<li><strong>macOS:</strong> <code>/Users/&lt;USER&gt;/Library/Application Support/ca.maxgmr.mfs16desktop/</code></li>
-<li><strong>Windows:</strong><code>C:\Users\&lt;USER&gt;\AppData\Local\maxgmr\mfs16desktop\data\</code></li>
-</ul>
-<h2 id="drive-header-format"><a class="header" href="#drive-header-format">Drive Header Format</a></h2>
-<p>The first 256 bytes (<code>0x00</code>..=<code>0xFF</code>) are devoted to the drive header.</p>
-<h3 id="0x10---drive-number"><a class="header" href="#0x10---drive-number">0x10 - Drive Number</a></h3>
-<p>A number from 0-255 denoting the drive number.</p>
-<h3 id="0x110x20---drive-name"><a class="header" href="#0x110x20---drive-name">0x11..=0x20 - Drive Name</a></h3>
-<p>The name of the drive. Up to 16 characters of ASCII-encoded text. A <code>null</code> byte signals an early end to the name.</p>
-<h3 id="0x210x22---block-size"><a class="header" href="#0x210x22---block-size">0x21..=0x22 - Block Size</a></h3>
-<p>The number of bytes per block, stored little-endian.</p>
-<h3 id="0x230x24---block-count"><a class="header" href="#0x230x24---block-count">0x23..=0x24 - Block Count</a></h3>
-<p>The number of blocks on the drive, stored little-endian.</p>
-<h3 id="0x25---drive-flags"><a class="header" href="#0x25---drive-flags">0x25 - Drive Flags</a></h3>
-<p>The flags of the drive device itself. Each bit corresponds to a given flag:</p>
-<div class="table-wrapper"><table><thead><tr><th>7 6 5 4 3</th><th>2</th><th>1</th><th>0</th></tr></thead><tbody>
-<tr><td></td><td>Busy</td><td>WriteFail</td><td>ReadFail</td></tr>
-</tbody></table>
-</div>
-<ul>
-<li><strong>ReadFail</strong>: This flag is set if a read operation failed.</li>
-<li><strong>WriteFail</strong>: This flag is set if a write operation failed.</li>
-<li><strong>Busy</strong>: This flag is set if the drive is currently performing an operation.</li>
-</ul>
+                        <h1 id="quick-start"><a class="header" href="#quick-start">Quick Start</a></h1>
+<h2 id="1-clone-the-git-repository"><a class="header" href="#1-clone-the-git-repository">1. Clone the Git repository</a></h2>
+<p>Clone the <a href="https://github.com/maxgmr/mfs16">Git repo</a> to a convenient place.</p>
+<p><code>git clone https://github.com/maxgmr/mfs16</code></p>
+<h2 id="2"><a class="header" href="#2">2.</a></h2>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="io.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="gpu.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="configuration.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -222,11 +197,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="io.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="gpu.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="configuration.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
