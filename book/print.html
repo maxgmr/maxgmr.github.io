@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="quick_start.html"><strong aria-hidden="true">2.</strong> Quick Start</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="cpu.html"><strong aria-hidden="true">4.</strong> CPU</a></li><li class="chapter-item expanded "><a href="interrupts.html"><strong aria-hidden="true">5.</strong> Interrupts</a></li><li class="chapter-item expanded "><a href="instruction_set.html"><strong aria-hidden="true">6.</strong> Instruction Set</a></li><li class="chapter-item expanded "><a href="memory_map.html"><strong aria-hidden="true">7.</strong> Memory Map</a></li><li class="chapter-item expanded "><a href="io.html"><strong aria-hidden="true">8.</strong> I/O</a></li><li class="chapter-item expanded "><a href="drives.html"><strong aria-hidden="true">9.</strong> Drives</a></li><li class="chapter-item expanded "><a href="gpu.html"><strong aria-hidden="true">10.</strong> GPU</a></li><li class="chapter-item expanded "><a href="mfs16asm.html"><strong aria-hidden="true">11.</strong> MFS-16 Assembly</a></li><li class="chapter-item expanded "><a href="demo_programs.html"><strong aria-hidden="true">12.</strong> Demo Programs</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="quick_start_linux.html"><strong aria-hidden="true">2.</strong> Quick Start - Linux</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="cpu.html"><strong aria-hidden="true">4.</strong> CPU</a></li><li class="chapter-item expanded "><a href="interrupts.html"><strong aria-hidden="true">5.</strong> Interrupts</a></li><li class="chapter-item expanded "><a href="instruction_set.html"><strong aria-hidden="true">6.</strong> Instruction Set</a></li><li class="chapter-item expanded "><a href="memory_map.html"><strong aria-hidden="true">7.</strong> Memory Map</a></li><li class="chapter-item expanded "><a href="io.html"><strong aria-hidden="true">8.</strong> I/O</a></li><li class="chapter-item expanded "><a href="drives.html"><strong aria-hidden="true">9.</strong> Drives</a></li><li class="chapter-item expanded "><a href="gpu.html"><strong aria-hidden="true">10.</strong> GPU</a></li><li class="chapter-item expanded "><a href="mfs16asm.html"><strong aria-hidden="true">11.</strong> MFS-16 Assembly</a></li><li class="chapter-item expanded "><a href="demo_programs.html"><strong aria-hidden="true">12.</strong> Demo Programs</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -178,11 +178,24 @@
 <p>The MFS-16 is a virtual computer, designed from scratch, with an original CPU instruction set and assembly language. The project attempts to be an accurate virtual representation of a theoretical computing system that could be implemented as real hardware.</p>
 <p>The instruction set, assembly language, and general system architecture are entirely original, with particular inspiration taken from the <a href="https://en.wikipedia.org/wiki/Intel_8080">Intel 8080</a> and <a href="https://en.wikipedia.org/wiki/Zilog_Z80">Zilog Z80</a> instruction sets.</p>
 <p>The MFS-16 code repository can be found <a href="https://github.com/maxgmr/mfs16">here</a>. The repository includes the core MFS-16 system, an assembler for assembling your own MFS-16 programs, and a desktop frontend with keyboard input, graphical display, user configuration, and a debugger.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="quick-start"><a class="header" href="#quick-start">Quick Start</a></h1>
-<h2 id="1-clone-the-git-repository"><a class="header" href="#1-clone-the-git-repository">1. Clone the Git repository</a></h2>
-<p>Clone the <a href="https://github.com/maxgmr/mfs16">Git repo</a> to a convenient place.</p>
-<p><code>git clone https://github.com/maxgmr/mfs16</code></p>
-<h2 id="2"><a class="header" href="#2">2.</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="quick-start---linux"><a class="header" href="#quick-start---linux">Quick Start - Linux</a></h1>
+<h3 id="1-preparations"><a class="header" href="#1-preparations">1. Preparations</a></h3>
+<p>Ensure that you have <a href="https://rustup.rs/">rustup</a>, <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">git</a>, <a href="https://cmake.org/">CMake</a>, and a C linker. A commonly-used C linker is included in the <a href="https://gcc.gnu.org/">GCC toolchain</a>.</p>
+<h3 id="2-clone-the-git-repository"><a class="header" href="#2-clone-the-git-repository">2. Clone the Git repository</a></h3>
+<p>Clone the <a href="https://github.com/maxgmr/mfs16">Git repo</a> to a convenient place, then enter the new <code>mfs16</code> directory.</p>
+<pre><code class="language-bash">git clone https://github.com/maxgmr/mfs16 &amp;&amp; cd mfs16
+</code></pre>
+<h2 id="3-build-the-program"><a class="header" href="#3-build-the-program">3. Build the program</a></h2>
+<p>Generally speaking, the program needs to be built using the <code>release</code> profile in order to run at the proper clock speed.</p>
+<pre><code class="language-bash">cargo build --release
+</code></pre>
+<h2 id="4-run"><a class="header" href="#4-run">4. Run!</a></h2>
+<p>To run the hello world program:</p>
+<pre><code class="language-bash">target/release/mfs16desktop programs/hello_world
+</code></pre>
+<p>Why not try typing some text?</p>
+<pre><code class="language-bash">target/release/mfs16desktop programs/scribe
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
 <p>By default, the user configuration file for MFS-16 desktop is found in one of the following locations:</p>
 <ul>
