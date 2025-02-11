@@ -1,5 +1,7 @@
 name: Max Gilmour
 markdown: kramdown
+baseurl: /
+url: http://maxgmr.github.io
 collections:
   projects:
     output: true
