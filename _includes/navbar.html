@@ -1,13 +1,20 @@
 <nav>
-  <ul>
-    {% for item in site.data.navbar %}
-    <li>
-      <a href="{{ item.link }}"
-            {% if page.url == item.link %}class="current"{% endif %}
-            {% if item.name == "GitHub" %}target="_blank"{% endif %}
-            {% if item.name == "MFS-16 Book" %}target="_blank"{% endif %}
-          > {{ item.name }} </a>
-    </li>
-    {% endfor %}
-  </ul>
+  <div class="navflexcontainer">
+      <div class="blacksmith_logo">
+        <p><a href="/">
+        <img src="../assets/images/blacksmith.jpg" id=blacksmith alt="Blacksmith Logo" />
+        </a></p>
+      </div>
+      <ul>
+        {% for item in site.data.navbar %}
+        <li>
+          <a href="{{ item.link }}"
+                {% if page.url == item.link %}class="current"{% endif %}
+                {% if item.name == "GitHub" %}target="_blank"{% endif %}
+                {% if item.name == "MFS-16 Book" %}target="_blank"{% endif %}
+              > {{ item.name }} </a>
+        </li>
+        {% endfor %}
+      </ul>
+  </div>
 </nav>

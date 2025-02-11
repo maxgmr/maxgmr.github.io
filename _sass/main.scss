@@ -22,12 +22,32 @@ body {
   width: 90%;
 }
 
+.navflexcontainer {
+  display: flex;
+  align-items: center;
+  column-gap: 5%;
+}
+/* @media (max-width: 320px) { */
+/*   .navflexcontainer { */
+/*     display: block; */
+/*   } */
+/* } */
+
+#blacksmith {
+  max-width: 25%;
+  height: auto;
+  display: flex;
+  flex-grow: 0;
+}
+
 nav ul,
 footer ul {
   font-family: "Noto Serif", "Times New Roman", serif;
   padding: 0px;
   list-style: none;
   font-weight: bold;
+  flex-grow: 1;
+  width: 80%;
 }
 nav ul li,
 footer ul li {
