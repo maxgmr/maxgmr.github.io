@@ -27,11 +27,11 @@ body {
   align-items: center;
   column-gap: 5%;
 }
-/* @media (max-width: 320px) { */
-/*   .navflexcontainer { */
-/*     display: block; */
-/*   } */
-/* } */
+@media (max-width: 320px) {
+  .navflexcontainer {
+    display: block;
+  }
+}
 
 #blacksmith {
   max-width: 25%;
