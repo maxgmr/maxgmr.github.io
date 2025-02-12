@@ -189,7 +189,7 @@
 <h3 id="0x110x20---drive-name"><a class="header" href="#0x110x20---drive-name">0x11..=0x20 - Drive Name</a></h3>
 <p>The name of the drive. Up to 16 characters of ASCII-encoded text. A <code>null</code> byte signals an early end to the name.</p>
 <h3 id="0x210x22---block-size"><a class="header" href="#0x210x22---block-size">0x21..=0x22 - Block Size</a></h3>
-<p>The number of bytes per block, stored little-endian.</p>
+<p>The number of bytes per block, stored little-endian. MFS-16 drives have a block size of 512.</p>
 <h3 id="0x230x24---block-count"><a class="header" href="#0x230x24---block-count">0x23..=0x24 - Block Count</a></h3>
 <p>The number of blocks on the drive, stored little-endian.</p>
 <h3 id="0x25---drive-flags"><a class="header" href="#0x25---drive-flags">0x25 - Drive Flags</a></h3>
