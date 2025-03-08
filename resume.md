@@ -8,7 +8,9 @@ A more detailed résumé can be provided upon request.
 
 ## Employment
 
-### Software & Business Intelligence Analyst (Oct 2024-Present)
+### System Software Engineer - Rust Compiler, Toolchain and Ecosystem (Mar 2024-Present)
+
+### Software & Business Intelligence Analyst (Oct 2024-Mar 2024)
 
 - Software development, data collection, and analysis.
 - Development, maintenance, and improvement of Python and JavaScript web scrapers and database management tools.
