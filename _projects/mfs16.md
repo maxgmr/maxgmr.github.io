@@ -2,7 +2,7 @@
 name: mfs16
 languages: Rust, MFS-16 Assembly
 blurb: "A from-scratch virtual computer."
-date: 24-11-21
+date: 25-02-19
 ---
 
 The MFS-16 is a virtual computer, designed from scratch, with an original CPU instruction set and assembly language. The project aims to be an accurate virtual representation of a theoretical computing system that could be implemented as real hardware.
@@ -21,7 +21,6 @@ Comprehensive MFS-16 documentation can be found <a href="../book/index.html" tar
         href="../assets/images/bouncing_logo.gif"
     %}
 </div>
-
 
 The MFS-16 project consists of three main components:
 

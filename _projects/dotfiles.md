@@ -1,6 +1,6 @@
 ---
 name: .dotfiles
-languages: Lua, Shell, Python
+languages: Lua, Bash, Python
 blurb: "My personal configuration files."
 date: 24-06-08
 ---
